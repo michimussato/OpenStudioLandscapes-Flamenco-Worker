@@ -1,0 +1,34 @@
+[project]
+name = "OpenStudioLandscapes-Template"
+description = "Template Feature for OpenStudioLandscapes"
+dependencies = [
+    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.8.0-rc1",
+]
+
+[project.urls]
+Homepage = "https://github.com/michimussato/OpenStudioLandscapes-Template"
+
+[project.optional-dependencies]
+sbom = [
+    "OpenStudioLandscapes-Template[graphviz]",
+]
+nox = [
+    "OpenStudioLandscapes-Template[testing]",
+]
+dev = [
+    "OpenStudioLandscapes-Template[testing]",
+    "OpenStudioLandscapes-Template[lint]",
+    "OpenStudioLandscapes-Template[nox]",
+    "OpenStudioLandscapes-Template[sbom]",
+    "OpenStudioLandscapes-Template[coverage]",
+    "OpenStudioLandscapes-Template[readme]",
+]
+
+[tool.setuptools]
+packages = [
+    "OpenStudioLandscapes.Template"
+]
+
+[tool.dagster]
+module_name = "OpenStudioLandscapes.Template.definitions"
+code_location_name = "OpenStudioLandscapes-Template"
