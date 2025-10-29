@@ -299,11 +299,102 @@ def compose_networks(
         "env_parent": AssetIn(
             AssetKey([*ASSET_HEADER["key_prefix"], "env_parent"]),
         ),
+        # "docker_config_json": AssetIn(
+        #     AssetKey([*ASSET_HEADER["key_prefix"], "docker_config_json"]),
+        # ),
+        # "group_in": AssetIn(
+        #     AssetKey([*ASSET_HEADER_BASE["key_prefix"], str(GroupIn.BASE_IN)])
+        # ),
+    },
+)
+def flamenco_worker_yaml(
+    context: AssetExecutionContext,
+    env: dict,  # pylint: disable=redefined-outer-name
+    env_parent: dict,  # pylint: disable=redefined-outer-name
+) -> Generator[Output[pathlib.Path] | AssetMaterialization | Any, None, None]:
+
+    flamenco_manager_yaml_path = pathlib.Path(
+        env["DOT_LANDSCAPES"],
+        env.get("LANDSCAPE", "default"),
+        f"{ASSET_HEADER['group_name']}__{'__'.join(ASSET_HEADER['key_prefix'])}",
+        "config",
+        "flamenco-worker.yaml",
+    ).expanduser()
+
+    flamenco_manager_yaml_str = textwrap.dedent(
+        """\
+        # Configuration file for Flamenco.
+        # For an explanation of the fields, refer to flamenco-manager-example.yaml
+        #
+        # NOTE: this file will be overwritten by Flamenco Manager's web-based configuration system.
+        #
+        # This file was written on 2025-10-29 13:10:37 +01:00 by Flamenco 3.7
+
+        manager_url: {manager_url}
+        task_types: [blender, ffmpeg, file-management, misc]
+        restart_exit_code: 47
+        
+        # Optional advanced option, available on Linux only:
+        oom_score_adjust: 500\
+        """
+    ).format(
+        manager_url=f"http://{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}",
+        **env
+    )
+
+    # compose_network_mode = ComposeNetworkMode.DEFAULT
+    #
+    # if compose_network_mode == ComposeNetworkMode.DEFAULT:
+    #     docker_dict = {
+    #         "networks": {
+    #             "flamenco": {
+    #                 "name": "network_flamenco",
+    #             },
+    #         },
+    #     }
+    #
+    # else:
+    #     docker_dict = {
+    #         "network_mode": compose_network_mode.value,
+    #     }
+
+    docker_yaml = yaml.safe_load(flamenco_manager_yaml_str)
+
+    flamenco_yaml_obj = yaml.safe_dump(docker_yaml, indent=2)
+
+    flamenco_manager_yaml_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(flamenco_manager_yaml_path, "w") as fw:
+        fw.write(flamenco_yaml_obj)
+
+    yield Output(flamenco_manager_yaml_path)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.path(flamenco_manager_yaml_path),
+            "docker_yaml": MetadataValue.md(f"```yaml\n{yaml.safe_dump(docker_yaml, indent=2)}\n```"),
+        },
+    )
+
+
+@asset(
+    **ASSET_HEADER,
+    ins={
+        "env": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "env"]),
+        ),
+        "env_parent": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "env_parent"]),
+        ),
         "build": AssetIn(
             AssetKey([*ASSET_HEADER_PARENT["key_prefix"], "build_docker_image"]),
         ),
         "compose_networks": AssetIn(
             AssetKey([*ASSET_HEADER["key_prefix"], "compose_networks"]),
+        ),
+        "flamenco_worker_yaml": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "flamenco_worker_yaml"]),
         ),
     },
 )
@@ -313,95 +404,134 @@ def compose_flamenco_worker(
     env: dict,  # pylint: disable=redefined-outer-name
     env_parent: dict,  # pylint: disable=redefined-outer-name
     compose_networks: dict,  # pylint: disable=redefined-outer-name
+    flamenco_worker_yaml: pathlib.Path,  # pylint: disable=redefined-outer-name
 ) -> Generator[Output[dict] | AssetMaterialization, None, None]:
     """ """
 
-    network_dict = {}
-    ports_dict = {}
 
-    if "networks" in compose_networks:
-        network_dict = {"networks": list(compose_networks.get("networks", {}).keys())}
-        ports_dict = {
-            "ports": [
-                f"{env['ENV_VAR_PORT_HOST']}:{env['ENV_VAR_PORT_CONTAINER']}",
-            ]
+
+    service_name_base = "flamenco-worker"
+    padding = 3
+
+    docker_dict = {"services": {}}
+
+    for i in range(NUM_SERVICES):
+        service_name = f"{service_name_base}-{str(i+1).zfill(padding)}"
+        container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
+        host_name = ".".join([service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]])
+
+        network_dict = {}
+        ports_dict = {}
+
+        if "networks" in compose_networks:
+            network_dict = {"networks": list(compose_networks.get("networks", {}).keys())}
+            ports_dict = {
+                "ports": [
+                    f"{env['ENV_VAR_PORT_HOST']}:{env['ENV_VAR_PORT_CONTAINER']}",
+                ]
+            }
+        elif "network_mode" in compose_networks:
+            network_dict = {"network_mode": compose_networks["network_mode"]}
+
+        storage = pathlib.Path(env["FLAMENCO_WORKER_STORAGE"]).joinpath(host_name)
+        storage.mkdir(parents=True, exist_ok=True)
+        #
+        # shared_storage = pathlib.Path(env_parent["FLAMENCO_SHARED_STORAGE"])
+        # shared_storage.mkdir(parents=True, exist_ok=True)
+
+        # flamenco_worker_yaml = storage.joinpath("flamenco-worker.yaml")
+        flamenco_worker_credentials_yaml_dir = storage.joinpath("flamenco-worker-credentials.yaml")
+
+        volumes_dict = {
+            "volumes": [
+                f"{flamenco_worker_yaml.as_posix()}:/app/flamenco-worker.yaml:ro",
+                f"{storage.as_posix()}:/app/flamenco-worker-files:rw",
+                # f"{shared_storage.as_posix()}:/app/flamenco-manager-storage-shared:rw",
+                # f"{flamenco_manager_yaml.as_posix()}:/app/flamenco-manager.yaml:ro",
+            ],
         }
-    elif "network_mode" in compose_networks:
-        network_dict = {"network_mode": compose_networks["network_mode"]}
 
-    # storage = pathlib.Path(env_parent["FLAMENCO_STORAGE"])
-    # storage.mkdir(parents=True, exist_ok=True)
-    #
-    # shared_storage = pathlib.Path(env_parent["FLAMENCO_SHARED_STORAGE"])
-    # shared_storage.mkdir(parents=True, exist_ok=True)
+        # For portability, convert absolute volume paths to relative paths
 
-    volumes_dict = {
-        "volumes": [
-            # f"{storage.as_posix()}:/app/flamenco-manager-storage:rw",
-            # f"{shared_storage.as_posix()}:/app/flamenco-manager-storage-shared:rw",
-            # f"{flamenco_manager_yaml.as_posix()}:/app/flamenco-manager.yaml:ro",
-        ],
-    }
+        _volume_relative = []
 
-    # For portability, convert absolute volume paths to relative paths
+        for v in volumes_dict["volumes"]:
 
-    _volume_relative = []
+            host, container = v.split(":", maxsplit=1)
 
-    for v in volumes_dict["volumes"]:
+            volume_dir_host_rel_path = get_relative_path_via_common_root(
+                context=context,
+                path_src=pathlib.Path(env["DOCKER_COMPOSE"]),
+                path_dst=pathlib.Path(host),
+                path_common_root=pathlib.Path(env["DOT_LANDSCAPES"]),
+            )
 
-        host, container = v.split(":", maxsplit=1)
+            _volume_relative.append(
+                f"{volume_dir_host_rel_path.as_posix()}:{container}",
+            )
 
-        volume_dir_host_rel_path = get_relative_path_via_common_root(
-            context=context,
-            path_src=pathlib.Path(env["DOCKER_COMPOSE"]),
-            path_dst=pathlib.Path(host),
-            path_common_root=pathlib.Path(env["DOT_LANDSCAPES"]),
-        )
+        volumes_dict = {
+            "volumes": [
+                *_volume_relative,
+            ],
+        }
 
-        _volume_relative.append(
-            f"{volume_dir_host_rel_path.as_posix()}:{container}",
-        )
+        command = [
+            "/app/flamenco-worker",
+            "-trace",
+            # "-manager",
+            # f"{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}"
+        ]
 
-    volumes_dict = {
-        "volumes": [
-            *_volume_relative,
-        ],
-    }
+        # service_name = "flamenco-worker"
+        # container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
+        # host_name = ".".join(
+        #     [env["HOSTNAME"] or service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]]
+        # )
+        #
+        # docker_dict = {
+        #     "services": {}
+        # }
+        #
+        # service_name_base = "flamenco-worker"
+        # padding = 3
+        #
+        # docker_dict = {"services": {}}
+        #
+        # for i in range(NUM_SERVICES):
+        #     service_name = f"{service_name_base}-{str(i+1).zfill(padding)}"
+        #     container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
+        #     host_name = ".".join([service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]])
 
-    command = [
-        "/app/flamenco-worker",
-        "-trace",
-        "-manager",
-        f"{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}"
-    ]
+        # deadline_command_compose_worker_runner_10_2.extend(["-name", str(service_name)])
 
-    service_name = "flamenco-worker"
-    container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
-    host_name = ".".join(
-        [env["HOSTNAME"] or service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]]
-    )
-
-    docker_dict = {
-        "services": {
-            service_name: {
-                "container_name": container_name,
-                "hostname": host_name,
-                "domainname": env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"],
-                # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
-                "restart": "always",
-                "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
-                % (build["image_name"], build["image_tags"][0]),
-                **copy.deepcopy(volumes_dict),
-                **copy.deepcopy(network_dict),
-                **copy.deepcopy(ports_dict),
-                # "environment": {
-                # },
-                # "healthcheck": {
-                # },
-                "command": command,
+        service = {
+            "container_name": container_name,
+            # To have a unique, dynamic hostname, we simply must not
+            # specify it.
+            # https://forums.docker.com/t/docker-compose-set-container-name-and-hostname-dynamicaly/138259/2
+            # https://shantanoo-desai.github.io/posts/technology/hostname-docker-container/
+            "hostname": host_name,
+            "domainname": env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"],
+            # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
+            "restart": "always",
+            "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
+                     % (build["image_name"], build["image_tags"][0]),
+            "environment": {
+                "FLAMENCO_HOME": "/app/flamenco-worker-files",
+                "FLAMENCO_WORKER_NAME": host_name,
             },
-        },
-    }
+            **copy.deepcopy(volumes_dict),
+            **copy.deepcopy(network_dict),
+            **copy.deepcopy(ports_dict),
+            # "environment": {
+            # },
+            # "healthcheck": {
+            # },
+            "command": command,
+        }
+
+        docker_dict["services"][service_name] = copy.deepcopy(service)
 
     docker_yaml = yaml.dump(docker_dict)
 
@@ -483,76 +613,76 @@ def cmd_append(
 
     ret = {"cmd": [], "exclude_from_quote": []}
 
-    compose_services = list(compose["services"].keys())
-
-    # Example cmd:
-    # /usr/bin/docker compose --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__group_out/docker_compose/docker-compose.yml --project-name 2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4-worker up --detach --remove-orphans && sudo nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001) --uts hostname "$(hostname -f)-nice-hack"
-
-    # cmd_docker_compose_up.extend(
+    # compose_services = list(compose["services"].keys())
+    #
+    # # Example cmd:
+    # # /usr/bin/docker compose --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__group_out/docker_compose/docker-compose.yml --project-name 2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4-worker up --detach --remove-orphans && sudo nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001) --uts hostname "$(hostname -f)-nice-hack"
+    #
+    # # cmd_docker_compose_up.extend(
+    # #     [
+    # #         # needs to be detached in order to get to do sudo
+    # #         "--detach",
+    # #     ]
+    # # )
+    #
+    # exclude_from_quote = []
+    #
+    # cmd_docker_compose_set_dynamic_hostnames = []
+    #
+    # # Transform container hostnames
+    # # - deadline-10-2-worker-001...nnn
+    # # - deadline-10-2-pulse-worker-001...nnn
+    # # into
+    # # - $(hostname)-deadline-10-2-worker-001...nnn
+    # # - $(hostname)-deadline-10-2-pulse-worker-001...nnn
+    # for service_name in compose_services:
+    #
+    #     target_worker = "$(docker inspect -f '{{ .State.Pid }}' %s)" % "--".join(
+    #         [service_name, env.get("LANDSCAPE", "default")]
+    #     )
+    #     hostname_worker = f"$(hostname)-{service_name}"
+    #
+    #     exclude_from_quote.extend(
+    #         [
+    #             target_worker,
+    #             hostname_worker,
+    #         ]
+    #     )
+    #
+    #     cmd_docker_compose_set_dynamic_hostname_worker = [
+    #         shutil.which("sudo"),
+    #         shutil.which("nsenter"),
+    #         "--target",
+    #         target_worker,
+    #         "--uts",
+    #         "hostname",
+    #         hostname_worker,
+    #     ]
+    #
+    #     # Reference:
+    #     # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 \
+    #     #     && /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker logs --follow
+    #     # Current:
+    #     # Pre
+    #     # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-pulse-worker-001' && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-worker-001'
+    #     # Post
+    #     #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001
+    #
+    #     cmd_docker_compose_set_dynamic_hostnames.extend(
+    #         [
+    #             "&&",
+    #             *cmd_docker_compose_set_dynamic_hostname_worker,
+    #         ]
+    #     )
+    #
+    # ret["cmd"].extend(cmd_docker_compose_set_dynamic_hostnames)
+    # ret["exclude_from_quote"].extend(
     #     [
-    #         # needs to be detached in order to get to do sudo
-    #         "--detach",
+    #         "&&",
+    #         ";",
+    #         *exclude_from_quote,
     #     ]
     # )
-
-    exclude_from_quote = []
-
-    cmd_docker_compose_set_dynamic_hostnames = []
-
-    # Transform container hostnames
-    # - deadline-10-2-worker-001...nnn
-    # - deadline-10-2-pulse-worker-001...nnn
-    # into
-    # - $(hostname)-deadline-10-2-worker-001...nnn
-    # - $(hostname)-deadline-10-2-pulse-worker-001...nnn
-    for service_name in compose_services:
-
-        target_worker = "$(docker inspect -f '{{ .State.Pid }}' %s)" % "--".join(
-            [service_name, env.get("LANDSCAPE", "default")]
-        )
-        hostname_worker = f"$(hostname)-{service_name}"
-
-        exclude_from_quote.extend(
-            [
-                target_worker,
-                hostname_worker,
-            ]
-        )
-
-        cmd_docker_compose_set_dynamic_hostname_worker = [
-            shutil.which("sudo"),
-            shutil.which("nsenter"),
-            "--target",
-            target_worker,
-            "--uts",
-            "hostname",
-            hostname_worker,
-        ]
-
-        # Reference:
-        # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 \
-        #     && /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker logs --follow
-        # Current:
-        # Pre
-        # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-pulse-worker-001' && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-worker-001'
-        # Post
-        #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001
-
-        cmd_docker_compose_set_dynamic_hostnames.extend(
-            [
-                "&&",
-                *cmd_docker_compose_set_dynamic_hostname_worker,
-            ]
-        )
-
-    ret["cmd"].extend(cmd_docker_compose_set_dynamic_hostnames)
-    ret["exclude_from_quote"].extend(
-        [
-            "&&",
-            ";",
-            *exclude_from_quote,
-        ]
-    )
 
     yield Output(ret)
 

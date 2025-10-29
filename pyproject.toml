@@ -16,7 +16,7 @@ classifiers = [
 ]
 dependencies = [
     "OpenStudioLandscapes @ git+https://github.com/michimussato/OpenStudioLandscapes@v1.8.0-rc1",
-    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.8.0-rc1",
+#    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.8.0-rc1",
     "PyYAML",
     "dagster==1.9.11",
     "docker-compose-graph @ git+https://github.com/michimussato/docker-compose-graph.git@v1.0.0",
@@ -24,7 +24,7 @@ dependencies = [
     "importlib-metadata; python_version<\"3.8\"",
     "snakemd",
 ]
-description = "Template Feature for OpenStudioLandscapes"
+description = "Flamenco-Worker Feature for OpenStudioLandscapes"
 dynamic = [
     "version",
 ]
@@ -34,7 +34,7 @@ license-files = [
 maintainers = [
     { email = "michimussato@gmail.com", name = "Michael Mussato" },
 ]
-name = "OpenStudioLandscapes-Template"
+name = "OpenStudioLandscapes-Flamenco-Worker"
 requires-python = ">=3.11"
 
 [project.entry-points]
@@ -45,12 +45,12 @@ coverage = [
     "pytest",
 ]
 dev = [
-    "OpenStudioLandscapes-Template[coverage]",
-    "OpenStudioLandscapes-Template[lint]",
-    "OpenStudioLandscapes-Template[nox]",
-    "OpenStudioLandscapes-Template[readme]",
-    "OpenStudioLandscapes-Template[sbom]",
-    "OpenStudioLandscapes-Template[testing]",
+    "OpenStudioLandscapes-Flamenco-Worker[coverage]",
+    "OpenStudioLandscapes-Flamenco-Worker[lint]",
+    "OpenStudioLandscapes-Flamenco-Worker[nox]",
+    "OpenStudioLandscapes-Flamenco-Worker[readme]",
+    "OpenStudioLandscapes-Flamenco-Worker[sbom]",
+    "OpenStudioLandscapes-Flamenco-Worker[testing]",
     "dagster-webserver==1.9.11",
 ]
 graphviz = [
@@ -64,7 +64,7 @@ lint = [
     "pylint",
 ]
 nox = [
-    "OpenStudioLandscapes-Template[testing]",
+    "OpenStudioLandscapes-Flamenco-Worker[testing]",
     "nox",
 ]
 pyproject = [
@@ -74,7 +74,7 @@ readme = [
     "OpenStudioLandscapesUtil-ReadmeGenerator @ git+https://github.com/michimussato/OpenStudioLandscapesUtil-ReadmeGenerator.git@v1.8.0-rc1",
 ]
 sbom = [
-    "OpenStudioLandscapes-Template[graphviz]",
+    "OpenStudioLandscapes-Flamenco-Worker[graphviz]",
     "cyclonedx-bom",
 ]
 testing = [
@@ -88,16 +88,16 @@ content-type = "text/markdown; charset=UTF-8"
 file = "README.md"
 
 [project.urls]
-Homepage = "https://github.com/michimussato/OpenStudioLandscapes-Template"
+Homepage = "https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker"
 
 [tool.dagster]
-code_location_name = "OpenStudioLandscapes-Template"
-module_name = "OpenStudioLandscapes.Template.definitions"
+code_location_name = "OpenStudioLandscapes-Flamenco-Worker"
+module_name = "OpenStudioLandscapes.Flamenco_Worker.definitions"
 
 [tool.setuptools]
 include-package-data = true
 packages = [
-    "OpenStudioLandscapes.Template",
+    "OpenStudioLandscapes.Flamenco_Worker",
 ]
 platforms = [
     "Linux",

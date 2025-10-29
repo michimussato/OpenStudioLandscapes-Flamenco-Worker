@@ -1,5 +1,7 @@
 __all__ = [
     "DOCKER_USE_CACHE",
+    "ASSET_HEADER_PARENT",
+    "NUM_SERVICES",
     "ASSET_HEADER",
     "FEATURE_CONFIGS",
 ]
@@ -19,6 +21,9 @@ from dagster import (
 
 LOGGER = get_dagster_logger(__name__)
 
+from OpenStudioLandscapes.Flamenco.constants import (
+    ASSET_HEADER as ASSET_HEADER_PARENT,
+)
 from OpenStudioLandscapes.engine.constants import DOCKER_USE_CACHE_GLOBAL
 from OpenStudioLandscapes.engine.enums import (
     FeatureVolumeType,
@@ -27,8 +32,14 @@ from OpenStudioLandscapes.engine.enums import (
 
 DOCKER_USE_CACHE = DOCKER_USE_CACHE_GLOBAL or False
 
+ASSET_HEADER_PARENT = ASSET_HEADER_PARENT
 
-GROUP = "Template"
+# This is helpful to simulate a render farm with this arbitrary number of slaves
+# In a production environment, one service per host is of course desirable
+NUM_SERVICES: int = 1
+
+
+GROUP = "Flamenco_Worker"
 KEY = [GROUP]
 FEATURE = f"OpenStudioLandscapes-{GROUP}".replace("_", "-")
 
@@ -41,38 +52,56 @@ ASSET_HEADER = {
 FEATURE_CONFIGS = {
     OpenStudioLandscapesConfig.DEFAULT: {
         "DOCKER_USE_CACHE": DOCKER_USE_CACHE,
-        "HOSTNAME": "template",
-        "TELEPORT_ENTRY_POINT_HOST": "{{HOSTNAME}}",  # Either a hardcoded str or a ref to a Variable (with double {{ }}!)
-        "TELEPORT_ENTRY_POINT_PORT": "{{ENV_VAR_PORT_HOST}}",  # Either a hardcoded str or a ref to a Variable (with double {{ }}!)
-        "ENV_VAR_PORT_HOST": "1234",
-        "ENV_VAR_PORT_CONTAINER": "4321",
-        f"EXTRA_FILE": pathlib.Path(
-            "{DOT_FEATURES}",
-            FEATURE,
-            ".payload",
-            "bin",
-            "extra.file",
-        )
-        .expanduser()
-        .as_posix(),
-        "TEMPLATE_VOLUME": {
-            #################################################################
-            # Inside Landscape:
+        "HOSTNAME": "flamenco-worker",
+        "TELEPORT_ENTRY_POINT_HOST": "",  # Either a hardcoded str or a ref to a Variable (with double {{ }}!)
+        "TELEPORT_ENTRY_POINT_PORT": "",  # Either a hardcoded str or a ref to a Variable (with double {{ }}!)
+        "FLAMENCO_WORKER_STORAGE": {
             FeatureVolumeType.CONTAINED: pathlib.Path(
                 "{DOT_LANDSCAPES}",
                 "{LANDSCAPE}",
-                f"{ASSET_HEADER['group_name']}__{'__'.join(ASSET_HEADER['key_prefix'])}",
-                "data",
-            ).as_posix(),
-            #################################################################
-            # Shared:
+                f"{GROUP}__{'__'.join(KEY)}",
+                "storage",
+            )
+            .expanduser()
+            .as_posix(),
             FeatureVolumeType.SHARED: pathlib.Path(
                 "{DOT_LANDSCAPES}",
                 "{DOT_SHARED_VOLUMES}",
-                f"{ASSET_HEADER['group_name']}__{'__'.join(ASSET_HEADER['key_prefix'])}",
-                "data",
-            ).as_posix(),
+                f"{GROUP}__{'__'.join(KEY)}",
+                "storage",
+            )
+            .expanduser()
+            .as_posix(),
         }[FeatureVolumeType.CONTAINED],
+        # "ENV_VAR_PORT_HOST": "1234",
+        # "ENV_VAR_PORT_CONTAINER": "4321",
+        # f"EXTRA_FILE": pathlib.Path(
+        #     "{DOT_FEATURES}",
+        #     FEATURE,
+        #     ".payload",
+        #     "bin",
+        #     "extra.file",
+        # )
+        # .expanduser()
+        # .as_posix(),
+        # "TEMPLATE_VOLUME": {
+        #     #################################################################
+        #     # Inside Landscape:
+        #     FeatureVolumeType.CONTAINED: pathlib.Path(
+        #         "{DOT_LANDSCAPES}",
+        #         "{LANDSCAPE}",
+        #         f"{ASSET_HEADER['group_name']}__{'__'.join(ASSET_HEADER['key_prefix'])}",
+        #         "data",
+        #     ).as_posix(),
+        #     #################################################################
+        #     # Shared:
+        #     FeatureVolumeType.SHARED: pathlib.Path(
+        #         "{DOT_LANDSCAPES}",
+        #         "{DOT_SHARED_VOLUMES}",
+        #         f"{ASSET_HEADER['group_name']}__{'__'.join(ASSET_HEADER['key_prefix'])}",
+        #         "data",
+        #     ).as_posix(),
+        # }[FeatureVolumeType.CONTAINED],
     }
 }
 # @formatter:on

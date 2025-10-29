@@ -1,26 +1,26 @@
 project:
   dependencies:
   - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.8.0-rc1
-  description: Template Feature for OpenStudioLandscapes
-  name: OpenStudioLandscapes-Template
+  description: Flamenco-Worker Feature for OpenStudioLandscapes
+  name: OpenStudioLandscapes-Flamenco-Worker
   optional-dependencies:
     dev:
-    - OpenStudioLandscapes-Template[testing]
-    - OpenStudioLandscapes-Template[lint]
-    - OpenStudioLandscapes-Template[nox]
-    - OpenStudioLandscapes-Template[sbom]
-    - OpenStudioLandscapes-Template[coverage]
-    - OpenStudioLandscapes-Template[readme]
+    - OpenStudioLandscapes-Flamenco-Worker[testing]
+    - OpenStudioLandscapes-Flamenco-Worker[lint]
+    - OpenStudioLandscapes-Flamenco-Worker[nox]
+    - OpenStudioLandscapes-Flamenco-Worker[sbom]
+    - OpenStudioLandscapes-Flamenco-Worker[coverage]
+    - OpenStudioLandscapes-Flamenco-Worker[readme]
     nox:
-    - OpenStudioLandscapes-Template[testing]
+    - OpenStudioLandscapes-Flamenco-Worker[testing]
     sbom:
-    - OpenStudioLandscapes-Template[graphviz]
+    - OpenStudioLandscapes-Flamenco-Worker[graphviz]
   urls:
-    Homepage: https://github.com/michimussato/OpenStudioLandscapes-Template
+    Homepage: https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker
 tool:
   dagster:
-    code_location_name: OpenStudioLandscapes-Template
-    module_name: OpenStudioLandscapes.Template.definitions
+    code_location_name: OpenStudioLandscapes-Flamenco-Worker
+    module_name: OpenStudioLandscapes.Flamenco_Worker.definitions
   setuptools:
     packages:
-    - OpenStudioLandscapes.Template
+    - OpenStudioLandscapes.Flamenco_Worker

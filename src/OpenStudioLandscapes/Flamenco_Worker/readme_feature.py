@@ -1,0 +1,45 @@
+import textwrap
+
+import snakemd
+
+
+def readme_feature(doc: snakemd.Document) -> snakemd.Document:
+
+    # Some Specific information
+
+    # doc.add_heading(
+    #     text="Official Resources",
+    #     level=1,
+    # )
+
+    # Logo
+
+    doc.add_paragraph(
+        snakemd.Inline(
+            text=textwrap.dedent(
+                """\
+                Logo Flamenco\
+                """
+            ),
+            image="https://flamenco.blender.org/brand.svg",
+            link="https://flamenco.blender.org/",
+        ).__str__()
+    )
+
+    doc.add_paragraph(
+        text=textwrap.dedent(
+            """\
+            Please visit the
+            [OpenStudioLandscapes-Flamenco](http://github.com/michimussato/OpenStudioLandscapes-Flamenco)
+            repository for more information.\
+            """
+        )
+    )
+
+    # doc.add_horizontal_rule()
+
+    return doc
+
+
+if __name__ == "__main__":
+    pass
