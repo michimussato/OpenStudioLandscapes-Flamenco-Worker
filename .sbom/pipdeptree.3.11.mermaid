@@ -1,6 +1,6 @@
 flowchart TD
     classDef missing stroke-dasharray: 5
-    alembic["alembic\n1.17.0"]
+    alembic["alembic\n1.17.1"]
     annotated-types["annotated-types\n0.7.0"]
     antlr4-python3-runtime["antlr4-python3-runtime\n4.13.2"]
     argcomplete["argcomplete\n3.6.3"]
@@ -13,7 +13,7 @@ flowchart TD
     click_0["click\n8.3.0"]
     coloredlogs["coloredlogs\n14.0"]
     colorlog["colorlog\n6.10.1"]
-    cyclonedx-bom["cyclonedx-bom\n7.2.0"]
+    cyclonedx-bom["cyclonedx-bom\n7.2.1"]
     cyclonedx-python-lib["cyclonedx-python-lib\n11.4.0"]
     dagster-pipes["dagster-pipes\n1.9.11"]
     dagster-postgres["dagster-postgres\n0.25.11"]
@@ -42,7 +42,7 @@ flowchart TD
     jsonpointer["jsonpointer\n3.0.0"]
     jsonschema-specifications["jsonschema-specifications\n2025.9.1"]
     jsonschema["jsonschema\n4.25.1"]
-    lark["lark\n1.3.0"]
+    lark["lark\n1.3.1"]
     license-expression["license-expression\n30.4.4"]
     lxml["lxml\n6.0.2"]
     mako["Mako\n1.3.10"]
@@ -50,7 +50,8 @@ flowchart TD
     markupsafe["MarkupSafe\n3.0.3"]
     mdurl["mdurl\n0.1.2"]
     nox["nox\n2025.10.16"]
-    openstudiolandscapes-template["OpenStudioLandscapes-Template\n0.0.0"]
+    openstudiolandscapes-flamenco-worker["OpenStudioLandscapes-Flamenco-Worker\n0.0.0"]
+    openstudiolandscapes-flamenco["OpenStudioLandscapes-Flamenco\n0.0.0"]
     openstudiolandscapes["OpenStudioLandscapes\n0.0.0"]
     openstudiolandscapesutil-harborcli["OpenStudioLandscapesUtil-HarborCLI\n0.0.0"]
     packageurl-python["packageurl-python\n0.17.5"]
@@ -69,7 +70,7 @@ flowchart TD
     pygments["Pygments\n2.19.2"]
     pyparsing["pyparsing\n3.2.5"]
     python-dateutil["python-dateutil\n2.9.0.post0"]
-    python-dotenv["python-dotenv\n1.1.1"]
+    python-dotenv["python-dotenv\n1.2.1"]
     pytz["pytz\n2025.2"]
     pyyaml["PyYAML\n6.0.3"]
     referencing["referencing\n0.37.0"]
@@ -82,10 +83,10 @@ flowchart TD
     setuptools["setuptools\n80.9.0"]
     six["six\n1.17.0"]
     smmap["smmap\n5.0.2"]
-    snakemd["snakemd\n2.3.0"]
+    snakemd["SnakeMD\n2.4.0"]
     sortedcontainers["sortedcontainers\n2.4.0"]
     sqlalchemy["SQLAlchemy\n2.0.44"]
-    structlog["structlog\n25.4.0"]
+    structlog["structlog\n25.5.0"]
     tabulate["tabulate\n0.9.0"]
     tomli["tomli\n2.3.0"]
     toposort["toposort\n1.10"]
@@ -96,7 +97,7 @@ flowchart TD
     universal-pathlib["universal_pathlib\n0.3.4"]
     uri-template["uri-template\n1.3.0"]
     urllib3["urllib3\n2.5.0"]
-    virtualenv["virtualenv\n20.35.3"]
+    virtualenv["virtualenv\n20.35.4"]
     watchdog["watchdog\n5.0.3"]
     webcolors["webcolors\n24.11.1"]
     alembic -- ">=1.4.0" --> sqlalchemy
@@ -187,12 +188,19 @@ flowchart TD
     openstudiolandscapes -- "any" --> pydot
     openstudiolandscapes -- "any" --> pyyaml
     openstudiolandscapes -- "any" --> snakemd
-    openstudiolandscapes-template -- "==1.9.11" --> dagster
-    openstudiolandscapes-template -- "any" --> docker-compose-graph
-    openstudiolandscapes-template -- "any" --> gitpython
-    openstudiolandscapes-template -- "any" --> openstudiolandscapes
-    openstudiolandscapes-template -- "any" --> pyyaml
-    openstudiolandscapes-template -- "any" --> snakemd
+    openstudiolandscapes-flamenco -- "==1.9.11" --> dagster
+    openstudiolandscapes-flamenco -- "any" --> docker-compose-graph
+    openstudiolandscapes-flamenco -- "any" --> gitpython
+    openstudiolandscapes-flamenco -- "any" --> openstudiolandscapes
+    openstudiolandscapes-flamenco -- "any" --> pyyaml
+    openstudiolandscapes-flamenco -- "any" --> snakemd
+    openstudiolandscapes-flamenco-worker -- "==1.9.11" --> dagster
+    openstudiolandscapes-flamenco-worker -- "any" --> docker-compose-graph
+    openstudiolandscapes-flamenco-worker -- "any" --> gitpython
+    openstudiolandscapes-flamenco-worker -- "any" --> openstudiolandscapes
+    openstudiolandscapes-flamenco-worker -- "any" --> openstudiolandscapes-flamenco
+    openstudiolandscapes-flamenco-worker -- "any" --> pyyaml
+    openstudiolandscapes-flamenco-worker -- "any" --> snakemd
     openstudiolandscapesutil-harborcli -- "any" --> dotenv
     openstudiolandscapesutil-harborcli -- "any" --> pyyaml
     openstudiolandscapesutil-harborcli -- "any" --> requests

@@ -339,7 +339,7 @@ def flamenco_worker_yaml(
         """
     ).format(
         manager_url=f"http://{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}",
-        **env
+        **env,
     )
 
     docker_yaml = yaml.safe_load(flamenco_manager_yaml_str)
@@ -356,8 +356,12 @@ def flamenco_worker_yaml(
     yield AssetMaterialization(
         asset_key=context.asset_key,
         metadata={
-            "__".join(context.asset_key.path): MetadataValue.path(flamenco_manager_yaml_path),
-            "docker_yaml": MetadataValue.md(f"```yaml\n{yaml.safe_dump(docker_yaml, indent=2)}\n```"),
+            "__".join(context.asset_key.path): MetadataValue.path(
+                flamenco_manager_yaml_path
+            ),
+            "docker_yaml": MetadataValue.md(
+                f"```yaml\n{yaml.safe_dump(docker_yaml, indent=2)}\n```"
+            ),
         },
     )
 
@@ -392,8 +396,6 @@ def compose_flamenco_worker(
 ) -> Generator[Output[dict] | AssetMaterialization, None, None]:
     """ """
 
-
-
     service_name_base = "flamenco-worker"
     padding = 3
 
@@ -408,7 +410,9 @@ def compose_flamenco_worker(
         ports_dict = {}
 
         if "networks" in compose_networks:
-            network_dict = {"networks": list(compose_networks.get("networks", {}).keys())}
+            network_dict = {
+                "networks": list(compose_networks.get("networks", {}).keys())
+            }
             ports_dict = {
                 "ports": [
                     f"{env['ENV_VAR_PORT_HOST']}:{env['ENV_VAR_PORT_CONTAINER']}",
@@ -492,7 +496,7 @@ def compose_flamenco_worker(
             # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
             "restart": "always",
             "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
-                     % (build["image_name"], build["image_tags"][0]),
+            % (build["image_name"], build["image_tags"][0]),
             "environment": {
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
                 "FLAMENCO_WORKER_NAME": host_name,

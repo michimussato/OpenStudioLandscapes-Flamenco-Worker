@@ -21,14 +21,12 @@ from dagster import (
 
 LOGGER = get_dagster_logger(__name__)
 
-from OpenStudioLandscapes.Flamenco.constants import (
-    ASSET_HEADER as ASSET_HEADER_PARENT,
-)
 from OpenStudioLandscapes.engine.constants import DOCKER_USE_CACHE_GLOBAL
 from OpenStudioLandscapes.engine.enums import (
     FeatureVolumeType,
     OpenStudioLandscapesConfig,
 )
+from OpenStudioLandscapes.Flamenco.constants import ASSET_HEADER as ASSET_HEADER_PARENT
 
 DOCKER_USE_CACHE = DOCKER_USE_CACHE_GLOBAL or False
 
