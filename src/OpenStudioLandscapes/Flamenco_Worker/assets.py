@@ -1,0 +1,564 @@
+import copy
+import json
+import pathlib
+import shutil
+import textwrap
+import time
+import urllib.parse
+from typing import Any, Generator
+
+import yaml
+from dagster import (
+    AssetExecutionContext,
+    AssetIn,
+    AssetKey,
+    AssetMaterialization,
+    MetadataValue,
+    Output,
+    asset,
+)
+from OpenStudioLandscapes.engine.common_assets.compose import get_compose
+from OpenStudioLandscapes.engine.common_assets.constants import get_constants
+from OpenStudioLandscapes.engine.common_assets.docker_compose_graph import (
+    get_docker_compose_graph,
+)
+from OpenStudioLandscapes.engine.common_assets.docker_config import get_docker_config
+from OpenStudioLandscapes.engine.common_assets.docker_config_json import (
+    get_docker_config_json,
+)
+from OpenStudioLandscapes.engine.common_assets.env import get_env
+from OpenStudioLandscapes.engine.common_assets.feature_out import get_feature_out
+from OpenStudioLandscapes.engine.common_assets.group_in import get_group_in
+from OpenStudioLandscapes.engine.common_assets.group_out import get_group_out
+from OpenStudioLandscapes.engine.constants import *
+from OpenStudioLandscapes.engine.enums import *
+from OpenStudioLandscapes.engine.utils import *
+from OpenStudioLandscapes.engine.utils.docker import *
+
+from OpenStudioLandscapes.Flamenco_Worker.constants import *
+
+constants = get_constants(
+    ASSET_HEADER=ASSET_HEADER,
+)
+
+
+docker_config = get_docker_config(
+    ASSET_HEADER=ASSET_HEADER,
+)
+
+
+group_in = get_group_in(
+    ASSET_HEADER=ASSET_HEADER,
+    ASSET_HEADER_PARENT=ASSET_HEADER_PARENT,
+    input_name=str(GroupIn.FEATURE_IN),
+)
+
+
+env = get_env(
+    ASSET_HEADER=ASSET_HEADER,
+)
+
+
+group_out = get_group_out(
+    ASSET_HEADER=ASSET_HEADER,
+)
+
+
+docker_compose_graph = get_docker_compose_graph(
+    ASSET_HEADER=ASSET_HEADER,
+)
+
+
+compose = get_compose(
+    ASSET_HEADER=ASSET_HEADER,
+)
+
+
+feature_out = get_feature_out(
+    ASSET_HEADER=ASSET_HEADER,
+    feature_out_ins={
+        "env": dict,
+        "compose": dict,
+        "group_in": dict,
+    },
+)
+
+
+docker_config_json = get_docker_config_json(
+    ASSET_HEADER=ASSET_HEADER,
+)
+
+
+# @asset(
+#     **ASSET_HEADER,
+#     ins={
+#         "env": AssetIn(
+#             AssetKey([*ASSET_HEADER["key_prefix"], "env"]),
+#         ),
+#         "docker_config_json": AssetIn(
+#             AssetKey([*ASSET_HEADER["key_prefix"], "docker_config_json"]),
+#         ),
+#         "group_in": AssetIn(
+#             AssetKey([*ASSET_HEADER_BASE["key_prefix"], str(GroupIn.BASE_IN)])
+#         ),
+#     },
+# )
+# def build_docker_image(
+#     context: AssetExecutionContext,
+#     env: dict,  # pylint: disable=redefined-outer-name
+#     docker_config_json: pathlib.Path,  # pylint: disable=redefined-outer-name
+#     group_in: dict,  # pylint: disable=redefined-outer-name
+# ) -> Generator[Output[dict] | AssetMaterialization, None, None]:
+#     """ """
+#
+#     build_base_image_data: dict = group_in["docker_image"]
+#     build_base_docker_config: DockerConfig = group_in["docker_config"]
+#
+#     if build_base_docker_config.value["docker_push"]:
+#         build_base_parent_image_prefix: str = build_base_image_data["image_prefix_full"]
+#     else:
+#         build_base_parent_image_prefix: str = build_base_image_data[
+#             "image_prefix_local"
+#         ]
+#
+#     build_base_parent_image_name: str = build_base_image_data["image_name"]
+#     build_base_parent_image_tags: list = build_base_image_data["image_tags"]
+#
+#     docker_file = pathlib.Path(
+#         env["DOT_LANDSCAPES"],
+#         env.get("LANDSCAPE", "default"),
+#         f"{ASSET_HEADER['group_name']}__{'__'.join(ASSET_HEADER['key_prefix'])}",
+#         "__".join(context.asset_key.path),
+#         "Dockerfiles",
+#         "Dockerfile",
+#     )
+#
+#     docker_file.parent.mkdir(parents=True, exist_ok=True)
+#
+#     image_name = get_image_name(context=context)
+#     image_prefix_local = parse_docker_image_path(
+#         docker_config=build_base_docker_config,
+#         prepend_registry=False,
+#     )
+#     image_prefix_full = parse_docker_image_path(
+#         docker_config=build_base_docker_config,
+#         prepend_registry=True,
+#     )
+#
+#     tags = [
+#         env.get("LANDSCAPE", str(time.time())),
+#     ]
+#
+#     # @formatter:off
+#     docker_file_str = textwrap.dedent(
+#         """\
+#         # {auto_generated}
+#         # {dagster_url}
+#         FROM {parent_image} AS {image_name}
+#         LABEL authors="{AUTHOR}"
+#
+#         ARG DEBIAN_FRONTEND=noninteractive
+#
+#         ENV CONTAINER_TIMEZONE={TIMEZONE}
+#         ENV SET_CONTAINER_TIMEZONE=true
+#
+#         SHELL ["/bin/bash", "-c"]
+#
+#         RUN apt-get update && apt-get upgrade -y
+#
+#         # WORKDIR /workdir
+#         # USER user
+#
+#         # RUN commands
+#         # [...]
+#
+#         RUN apt-get clean
+#
+#         ENTRYPOINT []
+#         """
+#     ).format(
+#         auto_generated=f"AUTO-GENERATED by Dagster Asset {'__'.join(context.asset_key.path)}",
+#         dagster_url=urllib.parse.quote(
+#             f"http://localhost:3000/asset-groups/{'%2F'.join(context.asset_key.path)}",
+#             safe=":/%",
+#         ),
+#         image_name=image_name,
+#         # Todo: this won't work as expected if len(tags) > 1
+#         parent_image=f"{build_base_parent_image_prefix}{build_base_parent_image_name}:{build_base_parent_image_tags[0]}",
+#         **env,
+#     )
+#     # @formatter:on
+#
+#     with open(docker_file, "w") as fw:
+#         fw.write(docker_file_str)
+#
+#     with open(docker_file, "r") as fr:
+#         docker_file_content = fr.read()
+#
+#     image_data = {
+#         "image_name": image_name,
+#         "image_prefix_local": image_prefix_local,
+#         "image_prefix_full": image_prefix_full,
+#         "image_tags": tags,
+#         "image_parent": copy.deepcopy(build_base_image_data),
+#     }
+#
+#     context.log.info(f"{image_data = }")
+#
+#     cmds = []
+#
+#     tags_local = [f"{image_prefix_local}{image_name}:{tag}" for tag in tags]
+#     tags_full = [f"{image_prefix_full}{image_name}:{tag}" for tag in tags]
+#
+#     cmd_build = docker_build_cmd(
+#         context=context,
+#         docker_config_json=docker_config_json,
+#         docker_file=docker_file,
+#         tags_local=tags_local,
+#         tags_full=tags_full,
+#     )
+#
+#     cmds.append(cmd_build)
+#
+#     cmds_push = docker_push_cmd(
+#         context=context,
+#         docker_config_json=docker_config_json,
+#         tags_full=tags_full,
+#     )
+#
+#     cmds.extend(cmds_push)
+#
+#     context.log.info(f"{cmds = }")
+#
+#     logs = docker_do(
+#         context=context,
+#         cmds=cmds,
+#     )
+#
+#     yield Output(image_data)
+#
+#     yield AssetMaterialization(
+#         asset_key=context.asset_key,
+#         metadata={
+#             "__".join(context.asset_key.path): MetadataValue.json(image_data),
+#             "docker_file": MetadataValue.md(f"```shell\n{docker_file_content}\n```"),
+#             "env": MetadataValue.json(env),
+#             "logs": MetadataValue.json(logs),
+#         },
+#     )
+
+
+@asset(
+    **ASSET_HEADER,
+)
+def compose_networks(
+    context: AssetExecutionContext,
+) -> Generator[
+    Output[dict[str, dict[str, dict[str, str]]]] | AssetMaterialization, None, None
+]:
+
+    compose_network_mode = ComposeNetworkMode.HOST
+
+    if compose_network_mode == ComposeNetworkMode.DEFAULT:
+        docker_dict = {
+            "networks": {
+                "flamenco-worker": {
+                    "name": "network_flamenco-worker",
+                },
+            },
+        }
+
+    else:
+        docker_dict = {
+            "network_mode": compose_network_mode.value,
+        }
+
+    docker_yaml = yaml.dump(docker_dict)
+
+    yield Output(docker_dict)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.json(docker_dict),
+            "compose_network_mode": MetadataValue.text(compose_network_mode.value),
+            "docker_dict": MetadataValue.md(
+                f"```json\n{json.dumps(docker_dict, indent=2)}\n```"
+            ),
+            "docker_yaml": MetadataValue.md(f"```shell\n{docker_yaml}\n```"),
+        },
+    )
+
+
+@asset(
+    **ASSET_HEADER,
+    ins={
+        "env": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "env"]),
+        ),
+        "env_parent": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "env_parent"]),
+        ),
+        "build": AssetIn(
+            AssetKey([*ASSET_HEADER_PARENT["key_prefix"], "build_docker_image"]),
+        ),
+        "compose_networks": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "compose_networks"]),
+        ),
+    },
+)
+def compose_flamenco_worker(
+    context: AssetExecutionContext,
+    build: dict,  # pylint: disable=redefined-outer-name
+    env: dict,  # pylint: disable=redefined-outer-name
+    env_parent: dict,  # pylint: disable=redefined-outer-name
+    compose_networks: dict,  # pylint: disable=redefined-outer-name
+) -> Generator[Output[dict] | AssetMaterialization, None, None]:
+    """ """
+
+    network_dict = {}
+    ports_dict = {}
+
+    if "networks" in compose_networks:
+        network_dict = {"networks": list(compose_networks.get("networks", {}).keys())}
+        ports_dict = {
+            "ports": [
+                f"{env['ENV_VAR_PORT_HOST']}:{env['ENV_VAR_PORT_CONTAINER']}",
+            ]
+        }
+    elif "network_mode" in compose_networks:
+        network_dict = {"network_mode": compose_networks["network_mode"]}
+
+    # storage = pathlib.Path(env_parent["FLAMENCO_STORAGE"])
+    # storage.mkdir(parents=True, exist_ok=True)
+    #
+    # shared_storage = pathlib.Path(env_parent["FLAMENCO_SHARED_STORAGE"])
+    # shared_storage.mkdir(parents=True, exist_ok=True)
+
+    volumes_dict = {
+        "volumes": [
+            # f"{storage.as_posix()}:/app/flamenco-manager-storage:rw",
+            # f"{shared_storage.as_posix()}:/app/flamenco-manager-storage-shared:rw",
+            # f"{flamenco_manager_yaml.as_posix()}:/app/flamenco-manager.yaml:ro",
+        ],
+    }
+
+    # For portability, convert absolute volume paths to relative paths
+
+    _volume_relative = []
+
+    for v in volumes_dict["volumes"]:
+
+        host, container = v.split(":", maxsplit=1)
+
+        volume_dir_host_rel_path = get_relative_path_via_common_root(
+            context=context,
+            path_src=pathlib.Path(env["DOCKER_COMPOSE"]),
+            path_dst=pathlib.Path(host),
+            path_common_root=pathlib.Path(env["DOT_LANDSCAPES"]),
+        )
+
+        _volume_relative.append(
+            f"{volume_dir_host_rel_path.as_posix()}:{container}",
+        )
+
+    volumes_dict = {
+        "volumes": [
+            *_volume_relative,
+        ],
+    }
+
+    command = [
+        "/app/flamenco-worker",
+        "-trace",
+        "-manager",
+        f"{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}"
+    ]
+
+    service_name = "flamenco-worker"
+    container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
+    host_name = ".".join(
+        [env["HOSTNAME"] or service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]]
+    )
+
+    docker_dict = {
+        "services": {
+            service_name: {
+                "container_name": container_name,
+                "hostname": host_name,
+                "domainname": env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"],
+                # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
+                "restart": "always",
+                "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
+                % (build["image_name"], build["image_tags"][0]),
+                **copy.deepcopy(volumes_dict),
+                **copy.deepcopy(network_dict),
+                **copy.deepcopy(ports_dict),
+                # "environment": {
+                # },
+                # "healthcheck": {
+                # },
+                "command": command,
+            },
+        },
+    }
+
+    docker_yaml = yaml.dump(docker_dict)
+
+    yield Output(docker_dict)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.json(docker_dict),
+            "docker_yaml": MetadataValue.md(f"```yaml\n{docker_yaml}\n```"),
+            # Todo: "cmd_docker_run": MetadataValue.path(cmd_list_to_str(cmd_docker_run)),
+        },
+    )
+
+
+@asset(
+    **ASSET_HEADER,
+    ins={
+        "compose_flamenco_worker": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "compose_flamenco_worker"]),
+        ),
+    },
+)
+def compose_maps(
+    context: AssetExecutionContext,
+    **kwargs,  # pylint: disable=redefined-outer-name
+) -> Generator[Output[list[dict]] | AssetMaterialization, None, None]:
+
+    ret = list(kwargs.values())
+
+    context.log.info(ret)
+
+    yield Output(ret)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.json(ret),
+        },
+    )
+
+
+@asset(
+    **ASSET_HEADER,
+    ins={},
+)
+def cmd_extend(
+    context: AssetExecutionContext,
+) -> Generator[Output[list[Any]] | AssetMaterialization | Any, Any, None]:
+
+    ret = []
+
+    yield Output(ret)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.json(ret),
+        },
+    )
+
+
+@asset(
+    **ASSET_HEADER,
+    ins={
+        "env": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "env"]),
+        ),
+        "compose": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "compose"]),
+        ),
+    },
+)
+def cmd_append(
+    context: AssetExecutionContext,
+    env: dict,  # pylint: disable=redefined-outer-name
+    compose: dict,  # pylint: disable=redefined-outer-name,
+) -> Generator[Output[dict[str, list[Any]]] | AssetMaterialization | Any, Any, None]:
+
+    ret = {"cmd": [], "exclude_from_quote": []}
+
+    compose_services = list(compose["services"].keys())
+
+    # Example cmd:
+    # /usr/bin/docker compose --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__group_out/docker_compose/docker-compose.yml --project-name 2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4-worker up --detach --remove-orphans && sudo nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001) --uts hostname "$(hostname -f)-nice-hack"
+
+    # cmd_docker_compose_up.extend(
+    #     [
+    #         # needs to be detached in order to get to do sudo
+    #         "--detach",
+    #     ]
+    # )
+
+    exclude_from_quote = []
+
+    cmd_docker_compose_set_dynamic_hostnames = []
+
+    # Transform container hostnames
+    # - deadline-10-2-worker-001...nnn
+    # - deadline-10-2-pulse-worker-001...nnn
+    # into
+    # - $(hostname)-deadline-10-2-worker-001...nnn
+    # - $(hostname)-deadline-10-2-pulse-worker-001...nnn
+    for service_name in compose_services:
+
+        target_worker = "$(docker inspect -f '{{ .State.Pid }}' %s)" % "--".join(
+            [service_name, env.get("LANDSCAPE", "default")]
+        )
+        hostname_worker = f"$(hostname)-{service_name}"
+
+        exclude_from_quote.extend(
+            [
+                target_worker,
+                hostname_worker,
+            ]
+        )
+
+        cmd_docker_compose_set_dynamic_hostname_worker = [
+            shutil.which("sudo"),
+            shutil.which("nsenter"),
+            "--target",
+            target_worker,
+            "--uts",
+            "hostname",
+            hostname_worker,
+        ]
+
+        # Reference:
+        # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 \
+        #     && /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker logs --follow
+        # Current:
+        # Pre
+        # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-pulse-worker-001' && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-worker-001'
+        # Post
+        #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001
+
+        cmd_docker_compose_set_dynamic_hostnames.extend(
+            [
+                "&&",
+                *cmd_docker_compose_set_dynamic_hostname_worker,
+            ]
+        )
+
+    ret["cmd"].extend(cmd_docker_compose_set_dynamic_hostnames)
+    ret["exclude_from_quote"].extend(
+        [
+            "&&",
+            ";",
+            *exclude_from_quote,
+        ]
+    )
+
+    yield Output(ret)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.json(ret),
+        },
+    )
