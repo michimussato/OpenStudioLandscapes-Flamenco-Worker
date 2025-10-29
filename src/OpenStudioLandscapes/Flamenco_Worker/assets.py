@@ -342,22 +342,6 @@ def flamenco_worker_yaml(
         **env
     )
 
-    # compose_network_mode = ComposeNetworkMode.DEFAULT
-    #
-    # if compose_network_mode == ComposeNetworkMode.DEFAULT:
-    #     docker_dict = {
-    #         "networks": {
-    #             "flamenco": {
-    #                 "name": "network_flamenco",
-    #             },
-    #         },
-    #     }
-    #
-    # else:
-    #     docker_dict = {
-    #         "network_mode": compose_network_mode.value,
-    #     }
-
     docker_yaml = yaml.safe_load(flamenco_manager_yaml_str)
 
     flamenco_yaml_obj = yaml.safe_dump(docker_yaml, indent=2)
@@ -435,19 +419,11 @@ def compose_flamenco_worker(
 
         storage = pathlib.Path(env["FLAMENCO_WORKER_STORAGE"]).joinpath(host_name)
         storage.mkdir(parents=True, exist_ok=True)
-        #
-        # shared_storage = pathlib.Path(env_parent["FLAMENCO_SHARED_STORAGE"])
-        # shared_storage.mkdir(parents=True, exist_ok=True)
-
-        # flamenco_worker_yaml = storage.joinpath("flamenco-worker.yaml")
-        flamenco_worker_credentials_yaml_dir = storage.joinpath("flamenco-worker-credentials.yaml")
 
         volumes_dict = {
             "volumes": [
                 f"{flamenco_worker_yaml.as_posix()}:/app/flamenco-worker.yaml:ro",
                 f"{storage.as_posix()}:/app/flamenco-worker-files:rw",
-                # f"{shared_storage.as_posix()}:/app/flamenco-manager-storage-shared:rw",
-                # f"{flamenco_manager_yaml.as_posix()}:/app/flamenco-manager.yaml:ro",
             ],
         }
 
@@ -596,93 +572,13 @@ def cmd_extend(
 
 @asset(
     **ASSET_HEADER,
-    ins={
-        "env": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "env"]),
-        ),
-        "compose": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "compose"]),
-        ),
-    },
+    ins={},
 )
 def cmd_append(
     context: AssetExecutionContext,
-    env: dict,  # pylint: disable=redefined-outer-name
-    compose: dict,  # pylint: disable=redefined-outer-name,
 ) -> Generator[Output[dict[str, list[Any]]] | AssetMaterialization | Any, Any, None]:
 
     ret = {"cmd": [], "exclude_from_quote": []}
-
-    # compose_services = list(compose["services"].keys())
-    #
-    # # Example cmd:
-    # # /usr/bin/docker compose --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__group_out/docker_compose/docker-compose.yml --project-name 2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4-worker up --detach --remove-orphans && sudo nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001) --uts hostname "$(hostname -f)-nice-hack"
-    #
-    # # cmd_docker_compose_up.extend(
-    # #     [
-    # #         # needs to be detached in order to get to do sudo
-    # #         "--detach",
-    # #     ]
-    # # )
-    #
-    # exclude_from_quote = []
-    #
-    # cmd_docker_compose_set_dynamic_hostnames = []
-    #
-    # # Transform container hostnames
-    # # - deadline-10-2-worker-001...nnn
-    # # - deadline-10-2-pulse-worker-001...nnn
-    # # into
-    # # - $(hostname)-deadline-10-2-worker-001...nnn
-    # # - $(hostname)-deadline-10-2-pulse-worker-001...nnn
-    # for service_name in compose_services:
-    #
-    #     target_worker = "$(docker inspect -f '{{ .State.Pid }}' %s)" % "--".join(
-    #         [service_name, env.get("LANDSCAPE", "default")]
-    #     )
-    #     hostname_worker = f"$(hostname)-{service_name}"
-    #
-    #     exclude_from_quote.extend(
-    #         [
-    #             target_worker,
-    #             hostname_worker,
-    #         ]
-    #     )
-    #
-    #     cmd_docker_compose_set_dynamic_hostname_worker = [
-    #         shutil.which("sudo"),
-    #         shutil.which("nsenter"),
-    #         "--target",
-    #         target_worker,
-    #         "--uts",
-    #         "hostname",
-    #         hostname_worker,
-    #     ]
-    #
-    #     # Reference:
-    #     # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 \
-    #     #     && /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker logs --follow
-    #     # Current:
-    #     # Pre
-    #     # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-pulse-worker-001' && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-worker-001'
-    #     # Post
-    #     #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001
-    #
-    #     cmd_docker_compose_set_dynamic_hostnames.extend(
-    #         [
-    #             "&&",
-    #             *cmd_docker_compose_set_dynamic_hostname_worker,
-    #         ]
-    #     )
-    #
-    # ret["cmd"].extend(cmd_docker_compose_set_dynamic_hostnames)
-    # ret["exclude_from_quote"].extend(
-    #     [
-    #         "&&",
-    #         ";",
-    #         *exclude_from_quote,
-    #     ]
-    # )
 
     yield Output(ret)
 
