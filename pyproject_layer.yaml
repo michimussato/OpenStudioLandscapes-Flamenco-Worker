@@ -1,6 +1,6 @@
 project:
   dependencies:
-  - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.8.0-rc1
+  - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.9.0-rc1
   description: Flamenco-Worker Feature for OpenStudioLandscapes
   name: OpenStudioLandscapes-Flamenco-Worker
   optional-dependencies:
