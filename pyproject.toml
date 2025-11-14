@@ -16,7 +16,7 @@ classifiers = [
 ]
 dependencies = [
     "OpenStudioLandscapes @ git+https://github.com/michimussato/OpenStudioLandscapes@v1.9.0",
-    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.9.0-rc1",
+    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco@v1.9.0",
     "PyYAML",
     "dagster==1.9.11",
     "docker-compose-graph @ git+https://github.com/michimussato/docker-compose-graph.git@v1.0.0",
