@@ -495,8 +495,9 @@ def compose_flamenco_worker(
             "domainname": env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"],
             # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
             "restart": "always",
-            "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
-            % (build["image_name"], build["image_tags"][0]),
+            # "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
+            # % (build["image_name"], build["image_tags"][0]),
+            "image": "%s:%s" % (build["image_name"], build["image_tags"][0]),
             "environment": {
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
                 "FLAMENCO_WORKER_NAME": host_name,
