@@ -497,7 +497,7 @@ def compose_flamenco_worker(
             "restart": "always",
             # "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
             # % (build["image_name"], build["image_tags"][0]),
-            "image": "%s:%s" % (build["image_name"], build["image_tags"][0]),
+                "image": "%s%s:%s" % (build["image_prefixes"], build["image_name"], build["image_tags"][0]),
             "environment": {
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
                 "FLAMENCO_WORKER_NAME": host_name,
