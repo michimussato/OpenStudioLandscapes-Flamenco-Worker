@@ -257,9 +257,9 @@ def compose_networks(
     Output[dict[str, dict[str, dict[str, str]]]] | AssetMaterialization, None, None
 ]:
 
-    compose_network_mode = ComposeNetworkMode.HOST
+    compose_network_mode = DockerComposePolicies.NETWORK_MODE.HOST
 
-    if compose_network_mode == ComposeNetworkMode.DEFAULT:
+    if compose_network_mode is DockerComposePolicies.NETWORK_MODE.DEFAULT:
         docker_dict = {
             "networks": {
                 "flamenco-worker": {
@@ -494,10 +494,11 @@ def compose_flamenco_worker(
             "hostname": host_name,
             "domainname": env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"],
             # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
-            "restart": "always",
+            "restart": DockerComposePolicies.RESTART_POLICY.ALWAYS.value,
             # "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
             # % (build["image_name"], build["image_tags"][0]),
-                "image": "%s%s:%s" % (build["image_prefixes"], build["image_name"], build["image_tags"][0]),
+            "image": "%s%s:%s"
+            % (build["image_prefixes"], build["image_name"], build["image_tags"][0]),
             "environment": {
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
                 "FLAMENCO_WORKER_NAME": host_name,
