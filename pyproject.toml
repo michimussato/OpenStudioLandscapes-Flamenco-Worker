@@ -58,6 +58,7 @@ graphviz = [
 ]
 lint = [
     "OpenStudioLandscapes @ git+https://github.com/michimussato/OpenStudioLandscapes.git",
+    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git",
     "black",
     "isort",
     "pre-commit",

@@ -11,6 +11,8 @@ project:
     - OpenStudioLandscapes-Flamenco-Worker[sbom]
     - OpenStudioLandscapes-Flamenco-Worker[coverage]
     - OpenStudioLandscapes-Flamenco-Worker[readme]
+    lint:
+    - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
     nox:
     - OpenStudioLandscapes-Flamenco-Worker[testing]
     - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
