@@ -13,8 +13,12 @@ project:
     - OpenStudioLandscapes-Flamenco-Worker[readme]
     nox:
     - OpenStudioLandscapes-Flamenco-Worker[testing]
+    - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
+    readme:
+    - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
     sbom:
     - OpenStudioLandscapes-Flamenco-Worker[graphviz]
+    - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
   urls:
     Homepage: https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker
 tool:
