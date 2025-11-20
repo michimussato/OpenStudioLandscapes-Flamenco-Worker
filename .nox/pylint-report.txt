@@ -53,5 +53,5 @@ src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:1:0: C0103: Module name "Fl
 src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:11:4: C0103: Constant name "dist_name" doesn't conform to UPPER_CASE naming style (invalid-name)
 
 ------------------------------------------------------------------
-Your code has been rated at 6.69/10 (previous run: 7.17/10, -0.48)
+Your code has been rated at 6.69/10 (previous run: 6.76/10, -0.07)
 
