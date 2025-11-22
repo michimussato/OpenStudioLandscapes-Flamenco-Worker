@@ -338,7 +338,7 @@ def flamenco_worker_yaml(
         oom_score_adjust: 500\
         """
     ).format(
-        manager_url=f"http://{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}",
+        manager_url=f"http://flamenco-manager.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}",
         **env,
     )
 
@@ -403,8 +403,14 @@ def compose_flamenco_worker(
 
     for i in range(NUM_SERVICES):
         service_name = f"{service_name_base}-{str(i+1).zfill(padding)}"
-        container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
-        host_name = ".".join([service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]])
+        container_name, host_name = get_docker_compose_names(
+            context=context,
+            service_name=service_name,
+            landscape_id=env.get("LANDSCAPE", "default"),
+            domain_lan=env.get("OPENSTUDIOLANDSCAPES__DOMAIN_LAN"),
+        )
+        # container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
+        # host_name = ".".join([service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]])
 
         network_dict = {}
         ports_dict = {}
