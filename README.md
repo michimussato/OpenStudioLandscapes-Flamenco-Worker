@@ -166,13 +166,10 @@ The following variables are being declared in `OpenStudioLandscapes.Flamenco_Wor
 
 #### Feature Config: default
 
-| Variable                    | Type   | Value                                                                   |
-| :-------------------------- | :----- | :---------------------------------------------------------------------- |
-| `DOCKER_USE_CACHE`          | `bool` | `False`                                                                 |
-| `HOSTNAME`                  | `str`  | `flamenco-worker`                                                       |
-| `TELEPORT_ENTRY_POINT_HOST` | `str`  | ``                                                                      |
-| `TELEPORT_ENTRY_POINT_PORT` | `str`  | ``                                                                      |
-| `FLAMENCO_WORKER_STORAGE`   | `str`  | `{DOT_LANDSCAPES}/{LANDSCAPE}/Flamenco_Worker__Flamenco_Worker/storage` |
+| Variable                  | Type   | Value                                                                   |
+| :------------------------ | :----- | :---------------------------------------------------------------------- |
+| `DOCKER_USE_CACHE`        | `bool` | `False`                                                                 |
+| `FLAMENCO_WORKER_STORAGE` | `str`  | `{DOT_LANDSCAPES}/{LANDSCAPE}/Flamenco_Worker__Flamenco_Worker/storage` |
 
 # Community
 

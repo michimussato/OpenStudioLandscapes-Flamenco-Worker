@@ -6,7 +6,6 @@ flowchart TD
     argcomplete["argcomplete\n3.6.3"]
     arrow["arrow\n1.4.0"]
     attrs["attrs\n25.4.0"]
-    backoff["backoff\n2.2.1"]
     boolean-py["boolean.py\n5.0"]
     certifi["certifi\n2025.11.12"]
     chardet["chardet\n5.2.0"]
@@ -53,7 +52,7 @@ flowchart TD
     openstudiolandscapes-flamenco-worker["OpenStudioLandscapes-Flamenco-Worker\n0.0.0"]
     openstudiolandscapes-flamenco["OpenStudioLandscapes-Flamenco\n0.0.0"]
     openstudiolandscapes["OpenStudioLandscapes\n0.0.0"]
-    packageurl-python["packageurl-python\n0.17.5"]
+    packageurl-python["packageurl-python\n0.17.6"]
     packaging["packaging\n25.0"]
     pathlib-abc["pathlib_abc\n0.5.2"]
     pip-requirements-parser["pip-requirements-parser\n32.0.1"]
@@ -64,7 +63,7 @@ flowchart TD
     psycopg2-binary["psycopg2-binary\n2.9.11"]
     py-serializable["py-serializable\n2.1.0"]
     pydantic-core["pydantic_core\n2.41.5"]
-    pydantic["pydantic\n2.12.4"]
+    pydantic["pydantic\n2.12.5"]
     pydot["pydot\n4.0.1"]
     pygments["Pygments\n2.19.2"]
     pyparsing["pyparsing\n3.2.5"]
@@ -177,7 +176,6 @@ flowchart TD
     nox -- ">=24.1" --> attrs
     nox -- ">=4" --> humanize
     openstudiolandscapes -- "==1.9.11" --> dagster
-    openstudiolandscapes -- "any" --> backoff
     openstudiolandscapes -- "any" --> dagster-postgres
     openstudiolandscapes -- "any" --> docker
     openstudiolandscapes -- "any" --> docker-compose-graph
@@ -187,13 +185,11 @@ flowchart TD
     openstudiolandscapes -- "any" --> pyyaml
     openstudiolandscapes -- "any" --> snakemd
     openstudiolandscapes-flamenco -- "==1.9.11" --> dagster
-    openstudiolandscapes-flamenco -- "any" --> backoff
     openstudiolandscapes-flamenco -- "any" --> docker-compose-graph
     openstudiolandscapes-flamenco -- "any" --> gitpython
     openstudiolandscapes-flamenco -- "any" --> pyyaml
     openstudiolandscapes-flamenco -- "any" --> snakemd
     openstudiolandscapes-flamenco-worker -- "==1.9.11" --> dagster
-    openstudiolandscapes-flamenco-worker -- "any" --> backoff
     openstudiolandscapes-flamenco-worker -- "any" --> docker-compose-graph
     openstudiolandscapes-flamenco-worker -- "any" --> gitpython
     openstudiolandscapes-flamenco-worker -- "any" --> pyyaml
