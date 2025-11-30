@@ -49,7 +49,6 @@ dev = [
     "OpenStudioLandscapes-Flamenco-Worker[readme]",
     "OpenStudioLandscapes-Flamenco-Worker[sbom]",
     "OpenStudioLandscapes-Flamenco-Worker[testing]",
-    "dagster-webserver==1.9.11",
 ]
 graphviz = [
     "graphviz",
