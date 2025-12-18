@@ -214,9 +214,6 @@ def flamenco_worker_yaml(
         "CONFIG": AssetIn(
             AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG"]),
         ),
-        "CONFIG_PARENT": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
-        ),
         "build": AssetIn(
             AssetKey([*ASSET_HEADER_FEATURE_IN["key_prefix"], "build_docker_image"]),
         ),
@@ -231,15 +228,13 @@ def flamenco_worker_yaml(
 def compose_flamenco_worker(
     context: AssetExecutionContext,
     build: Dict,  # pylint: disable=redefined-outer-name
-    CONFIG: Config,
-    CONFIG_PARENT: ConfigParent,
+    CONFIG: Config,  # pylint: disable=redefined-outer-name
     compose_networks: Dict,  # pylint: disable=redefined-outer-name
     flamenco_worker_yaml: pathlib.Path,  # pylint: disable=redefined-outer-name
 ) -> Generator[Output[Dict] | AssetMaterialization, None, None]:
     """ """
 
     env: Dict = CONFIG.env
-    # env_parent: Dict = CONFIG_PARENT.env
 
     config_engine: ConfigEngine = CONFIG.config_engine
 
