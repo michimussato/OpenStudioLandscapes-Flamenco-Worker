@@ -30,8 +30,8 @@ def readme_feature(doc: snakemd.Document) -> snakemd.Document:
         text=textwrap.dedent(
             """\
             Please visit the
-            [OpenStudioLandscapes-Flamenco](http://github.com/michimussato/OpenStudioLandscapes-Flamenco)
-            repository for more information.\
+            [Blender Flamenco](https://flamenco.blender.org/)
+            landing page for more information.\
             """
         )
     )

@@ -27,7 +27,10 @@ This `README.md` was dynamically created with [OpenStudioLandscapesUtil-ReadmeGe
 
 This is an extension to the OpenStudioLandscapes ecosystem. The full documentation of OpenStudioLandscapes is available [here](https://github.com/michimussato/OpenStudioLandscapes).
 
-You feel like writing your own Feature? Go and check out the [OpenStudioLandscapes-Template](https://github.com/michimussato/OpenStudioLandscapes-Template).
+> [!NOTE]
+> 
+> You feel like writing your own Feature? Go and check out the 
+> [OpenStudioLandscapes-Template](https://github.com/michimussato/OpenStudioLandscapes-Template).
 
 ## Configuration
 
@@ -76,7 +79,7 @@ key_prefixes:
 
 [![Logo Flamenco ](https://flamenco.blender.org/brand.svg)](https://flamenco.blender.org/)
 
-Please visit the [OpenStudioLandscapes-Flamenco](http://github.com/michimussato/OpenStudioLandscapes-Flamenco) repository for more information.
+Please visit the [Blender Flamenco](https://flamenco.blender.org/) landing page for more information.
 
 ***
 
@@ -199,4 +202,4 @@ Currently, the following Python interpreters are enabled for testing:
 
 ***
 
-Last changed: **2025-12-19 09:36:30 UTC**.
+Last changed: **2025-12-19 09:42:14 UTC**.
