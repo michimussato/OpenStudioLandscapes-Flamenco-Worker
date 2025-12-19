@@ -64,12 +64,9 @@ key_prefixes:
 
 #compose_scope: "worker"
 
-# Not enabled by default because this Feature
-# has some basic requirements, such as
-# the installers
-#enabled: false
+#enabled: true
 
-#deadline_10_2_worker_NUM_SERVICES: 1
+#flamenco_worker_NUM_SERVICES: 1
 
 ```
 
@@ -202,4 +199,4 @@ Currently, the following Python interpreters are enabled for testing:
 
 ***
 
-Last changed: **2025-12-19 09:42:14 UTC**.
+Last changed: **2025-12-19 15:51:32 UTC**.
