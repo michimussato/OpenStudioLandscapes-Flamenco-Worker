@@ -2,7 +2,7 @@ import copy
 import enum
 import pathlib
 import textwrap
-from typing import Any, Generator, Dict, List, Union
+from typing import Any, Dict, Generator, List, Union
 
 import yaml
 from dagster import (
@@ -10,20 +10,24 @@ from dagster import (
     AssetIn,
     AssetKey,
     AssetMaterialization,
+    AssetsDefinition,
     MetadataValue,
     Output,
-    asset, AssetsDefinition,
+    asset,
 )
 from OpenStudioLandscapes.engine.common_assets.compose import get_compose
-
-from OpenStudioLandscapes.engine.common_assets.compose_scope import get_compose_scope_group__cmd
+from OpenStudioLandscapes.engine.common_assets.compose_scope import (
+    get_compose_scope_group__cmd,
+)
 from OpenStudioLandscapes.engine.common_assets.docker_compose_graph import (
     get_docker_compose_graph,
 )
-
 from OpenStudioLandscapes.engine.common_assets.feature import get_feature__CONFIG
 from OpenStudioLandscapes.engine.common_assets.feature_out import get_feature_out_v2
-from OpenStudioLandscapes.engine.common_assets.group_in import get_feature_in, get_feature_in_parent
+from OpenStudioLandscapes.engine.common_assets.group_in import (
+    get_feature_in,
+    get_feature_in_parent,
+)
 from OpenStudioLandscapes.engine.common_assets.group_out import get_group_out
 from OpenStudioLandscapes.engine.config.models import ConfigEngine
 from OpenStudioLandscapes.engine.constants import ASSET_HEADER_BASE
@@ -32,14 +36,15 @@ from OpenStudioLandscapes.engine.link.models import OpenStudioLandscapesFeatureI
 from OpenStudioLandscapes.engine.utils import *
 from OpenStudioLandscapes.engine.utils.docker.compose_dicts import *
 
+# Override default ConfigParent
+from OpenStudioLandscapes.Flamenco.config.models import Config as ConfigParent
+from OpenStudioLandscapes.Flamenco.constants import (
+    ASSET_HEADER as ASSET_HEADER_FEATURE_IN,
+)
+
 from OpenStudioLandscapes.Flamenco_Worker import dist
 from OpenStudioLandscapes.Flamenco_Worker.config.models import CONFIG_STR, Config
 from OpenStudioLandscapes.Flamenco_Worker.constants import *
-
-# Override default ConfigParent
-from OpenStudioLandscapes.Flamenco.config.models import Config as ConfigParent
-from OpenStudioLandscapes.Flamenco.constants import ASSET_HEADER as ASSET_HEADER_FEATURE_IN
-
 
 # https://github.com/yaml/pyyaml/issues/722#issuecomment-1969292770
 yaml.SafeDumper.add_multi_representer(
@@ -261,13 +266,13 @@ def compose_flamenco_worker(
             network_dict = {
                 "networks": list(compose_networks.get("networks", {}).keys())
             }
-            ports_dict = {
-                "ports": []
-            }
+            ports_dict = {"ports": []}
         elif "network_mode" in compose_networks:
             network_dict = {"network_mode": compose_networks["network_mode"]}
 
-        storage = pathlib.Path(CONFIG.flamenco_worker_storage_expanded).joinpath(host_name)
+        storage = pathlib.Path(CONFIG.flamenco_worker_storage_expanded).joinpath(
+            host_name
+        )
         storage.mkdir(parents=True, exist_ok=True)
 
         volumes_dict = {
