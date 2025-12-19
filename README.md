@@ -4,16 +4,16 @@
 
 1. [Feature: OpenStudioLandscapes-Flamenco-Worker](#feature-openstudiolandscapes-flamenco-worker)
    1. [Brief](#brief)
-   2. [Requirements](#requirements)
-   3. [Install](#install)
+   2. [Configuration](#configuration)
+   3. [Official Resources](#official-resources)
+2. [Community](#community)
+3. [Technical Reference](#technical-reference)
+   1. [Requirements](#requirements)
+   2. [Install](#install)
       1. [This Feature](#this-feature)
-   4. [Add to OpenStudioLandscapes](#add-to-openstudiolandscapes)
-   5. [Testing](#testing)
+   3. [Testing](#testing)
       1. [pre-commit](#pre-commit)
       2. [nox](#nox)
-   6. [Variables](#variables)
-      1. [Feature Configs](#feature-configs)
-2. [Community](#community)
 
 ***
 
@@ -28,6 +28,80 @@ This `README.md` was dynamically created with [OpenStudioLandscapesUtil-ReadmeGe
 This is an extension to the OpenStudioLandscapes ecosystem. The full documentation of OpenStudioLandscapes is available [here](https://github.com/michimussato/OpenStudioLandscapes).
 
 You feel like writing your own Feature? Go and check out the [OpenStudioLandscapes-Template](https://github.com/michimussato/OpenStudioLandscapes-Template).
+
+## Configuration
+
+OpenStudioLandscapes will search for a local config store. The default location is `~/.config/OpenStudioLandscapes/config-store/` but you can specify a different location if you need to.
+
+A local config store location will be created if it doesn't exist, together with the `config.yml` files for each individual Feature.
+
+> [!TIP]
+> 
+> The config store root will be initialized as a local Git
+> controlled repository. This makes it easy to track changes
+> you made to the `config.yml`.
+
+> [!TIP]
+> 
+> To specify a config store location different than
+> the default, you can do so be setting the environment variable
+> `OPENSTUDIOLANDSCAPES__CONFIGSTORE_ROOT`:
+> 
+> ```shell
+> OPENSTUDIOLANDSCAPES__CONFIGSTORE_ROOT="~/.config/OpenStudioLandscapes/my-custom-config-store"
+> ```
+
+The following settings are available in `OpenStudioLandscapes-Flamenco-Worker` and are accessible throughout the [`OpenStudioLandscapes-Flamenco-Worker`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/OpenStudioLandscapes/Flamenco_Worker/config/models.py) package.
+
+```yaml
+# Base Information
+group_name: "OpenStudioLandscapes_Flamenco_Worker"
+key_prefixes:
+  - "OpenStudioLandscapes_Flamenco_Worker"
+
+#compose_scope: "worker"
+
+# Not enabled by default because this Feature
+# has some basic requirements, such as
+# the installers
+#enabled: false
+
+#deadline_10_2_worker_NUM_SERVICES: 1
+
+```
+
+***
+
+## Official Resources
+
+[![Logo Flamenco ](https://flamenco.blender.org/brand.svg)](https://flamenco.blender.org/)
+
+Please visit the [OpenStudioLandscapes-Flamenco](http://github.com/michimussato/OpenStudioLandscapes-Flamenco) repository for more information.
+
+***
+
+# Community
+
+| Feature                              | GitHub                                                                                                                                       | Discord                                                                 |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| OpenStudioLandscapes                 | [https://github.com/michimussato/OpenStudioLandscapes](https://github.com/michimussato/OpenStudioLandscapes)                                 | [# openstudiolandscapes-general](https://discord.gg/F6bDRWsHac)         |
+| OpenStudioLandscapes-Ayon            | [https://github.com/michimussato/OpenStudioLandscapes-Ayon](https://github.com/michimussato/OpenStudioLandscapes-Ayon)                       | [# openstudiolandscapes-ayon](https://discord.gg/gd6etWAF3v)            |
+| OpenStudioLandscapes-Dagster         | [https://github.com/michimussato/OpenStudioLandscapes-Dagster](https://github.com/michimussato/OpenStudioLandscapes-Dagster)                 | [# openstudiolandscapes-dagster](https://discord.gg/jwB3DwmKvs)         |
+| OpenStudioLandscapes-Flamenco        | [https://github.com/michimussato/OpenStudioLandscapes-Flamenco](https://github.com/michimussato/OpenStudioLandscapes-Flamenco)               | [# openstudiolandscapes-flamenco](https://discord.gg/EPrX5fzBCf)        |
+| OpenStudioLandscapes-Flamenco-Worker | [https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker) | [# openstudiolandscapes-flamenco-worker](https://discord.gg/Sa2zFqSc4p) |
+| OpenStudioLandscapes-Kitsu           | [https://github.com/michimussato/OpenStudioLandscapes-Kitsu](https://github.com/michimussato/OpenStudioLandscapes-Kitsu)                     | [# openstudiolandscapes-kitsu](https://discord.gg/6cc6mkReJ7)           |
+| OpenStudioLandscapes-RustDeskServer  | [https://github.com/michimussato/OpenStudioLandscapes-RustDeskServer](https://github.com/michimussato/OpenStudioLandscapes-RustDeskServer)   | [# openstudiolandscapes-rustdeskserver](https://discord.gg/nJ8Ffd2xY3)  |
+| OpenStudioLandscapes-Template        | [https://github.com/michimussato/OpenStudioLandscapes-Template](https://github.com/michimussato/OpenStudioLandscapes-Template)               | [# openstudiolandscapes-template](https://discord.gg/J59GYp3Wpy)        |
+| OpenStudioLandscapes-VERT            | [https://github.com/michimussato/OpenStudioLandscapes-VERT](https://github.com/michimussato/OpenStudioLandscapes-VERT)                       | [# openstudiolandscapes-twingate](https://discord.gg/FYaFRUwbYr)        |
+
+To follow up on the previous LinkedIn publications, visit:
+
+- [OpenStudioLandscapes on LinkedIn](https://www.linkedin.com/company/106731439/).
+- [Search for tag #OpenStudioLandscapes on LinkedIn](https://www.linkedin.com/search/results/all/?keywords=%23openstudiolandscapes).
+
+***
+
+# Technical Reference
 
 ## Requirements
 
@@ -64,27 +138,6 @@ pip install -e ".[dev]"
 
 For more info see [VCS Support of pip](https://pip.pypa.io/en/stable/topics/vcs-support/).
 
-## Add to OpenStudioLandscapes
-
-Add the following code to `OpenStudioLandscapes.engine.features.FEATURES`:
-
-```python
-FEATURES.update(
-    "OpenStudioLandscapes-Flamenco-Worker": {
-        "enabled": True|False,
-        # - from ENVIRONMENT VARIABLE (.env):
-        #   "enabled": get_bool_env("ENV_VAR")
-        # - combined:
-        #   "enabled": True|False or get_bool_env(
-        #       "OPENSTUDIOLANDSCAPES__ENABLE_FEATURE_OPENSTUDIOLANDSCAPES_FLAMENCO_WORKER"
-        #   )
-        "module": "OpenStudioLandscapes.Flamenco_Worker.definitions",
-        "compose_scope": ComposeScope.DEFAULT,
-        "feature_config": OpenStudioLandscapesConfig.DEFAULT,
-    }
-)
-```
-
 ## Testing
 
 ### pre-commit
@@ -108,12 +161,6 @@ nox --no-error-on-missing-interpreters --report .nox/nox-report.json
 
 ```shell
 nox -v --add-timestamp --session readme
-```
-
-#### Generate Sphinx Documentation
-
-```shell
-nox -v --add-timestamp --session docs
 ```
 
 #### pylint
@@ -150,48 +197,6 @@ Currently, the following Python interpreters are enabled for testing:
 
 - `python3.11`
 
-## Variables
-
-The following variables are being declared in `OpenStudioLandscapes.Flamenco_Worker.constants` and are accessible throughout the [`OpenStudioLandscapes-Flamenco-Worker`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/src/OpenStudioLandscapes/Flamenco_Worker/constants.py) package.
-
-| Variable              | Type   |
-| :-------------------- | :----- |
-| `DOCKER_USE_CACHE`    | `bool` |
-| `ASSET_HEADER_PARENT` | `dict` |
-| `NUM_SERVICES`        | `int`  |
-| `ASSET_HEADER`        | `dict` |
-| `FEATURE_CONFIGS`     | `dict` |
-
-### Feature Configs
-
-#### Feature Config: default
-
-| Variable                  | Type   | Value                                                                   |
-| :------------------------ | :----- | :---------------------------------------------------------------------- |
-| `DOCKER_USE_CACHE`        | `bool` | `False`                                                                 |
-| `FLAMENCO_WORKER_STORAGE` | `str`  | `{DOT_LANDSCAPES}/{LANDSCAPE}/Flamenco_Worker__Flamenco_Worker/storage` |
-
-# Community
-
-| Feature                              | GitHub                                                                                                                                       | Discord                                                                 |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| OpenStudioLandscapes                 | [https://github.com/michimussato/OpenStudioLandscapes](https://github.com/michimussato/OpenStudioLandscapes)                                 | [# openstudiolandscapes-general](https://discord.gg/F6bDRWsHac)         |
-| OpenStudioLandscapes-Ayon            | [https://github.com/michimussato/OpenStudioLandscapes-Ayon](https://github.com/michimussato/OpenStudioLandscapes-Ayon)                       | [# openstudiolandscapes-ayon](https://discord.gg/gd6etWAF3v)            |
-| OpenStudioLandscapes-Dagster         | [https://github.com/michimussato/OpenStudioLandscapes-Dagster](https://github.com/michimussato/OpenStudioLandscapes-Dagster)                 | [# openstudiolandscapes-dagster](https://discord.gg/jwB3DwmKvs)         |
-| OpenStudioLandscapes-Flamenco        | [https://github.com/michimussato/OpenStudioLandscapes-Flamenco](https://github.com/michimussato/OpenStudioLandscapes-Flamenco)               | [# openstudiolandscapes-flamenco](https://discord.gg/EPrX5fzBCf)        |
-| OpenStudioLandscapes-Flamenco-Worker | [https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker) | [# openstudiolandscapes-flamenco-worker](https://discord.gg/Sa2zFqSc4p) |
-| OpenStudioLandscapes-Kitsu           | [https://github.com/michimussato/OpenStudioLandscapes-Kitsu](https://github.com/michimussato/OpenStudioLandscapes-Kitsu)                     | [# openstudiolandscapes-kitsu](https://discord.gg/6cc6mkReJ7)           |
-| OpenStudioLandscapes-RustDeskServer  | [https://github.com/michimussato/OpenStudioLandscapes-RustDeskServer](https://github.com/michimussato/OpenStudioLandscapes-RustDeskServer)   | [# openstudiolandscapes-rustdeskserver](https://discord.gg/nJ8Ffd2xY3)  |
-| OpenStudioLandscapes-Template        | [https://github.com/michimussato/OpenStudioLandscapes-Template](https://github.com/michimussato/OpenStudioLandscapes-Template)               | [# openstudiolandscapes-template](https://discord.gg/J59GYp3Wpy)        |
-| OpenStudioLandscapes-VERT            | [https://github.com/michimussato/OpenStudioLandscapes-VERT](https://github.com/michimussato/OpenStudioLandscapes-VERT)                       | [# openstudiolandscapes-twingate](https://discord.gg/FYaFRUwbYr)        |
-
-To follow up on the previous LinkedIn publications, visit:
-
-- [OpenStudioLandscapes on LinkedIn](https://www.linkedin.com/company/106731439/).
-- [Search for tag #OpenStudioLandscapes on LinkedIn](https://www.linkedin.com/search/results/all/?keywords=%23openstudiolandscapes).
-
 ***
 
-[![Logo Flamenco ](https://flamenco.blender.org/brand.svg)](https://flamenco.blender.org/)
-
-Please visit the [OpenStudioLandscapes-Flamenco](http://github.com/michimussato/OpenStudioLandscapes-Flamenco) repository for more information.
+Last changed: **2025-12-19 09:36:30 UTC**.
