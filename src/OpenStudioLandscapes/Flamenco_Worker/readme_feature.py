@@ -7,10 +7,10 @@ def readme_feature(doc: snakemd.Document) -> snakemd.Document:
 
     # Some Specific information
 
-    # doc.add_heading(
-    #     text="Official Resources",
-    #     level=1,
-    # )
+    doc.add_heading(
+        text="Official Resources",
+        level=1,
+    )
 
     # Logo
 
