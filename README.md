@@ -5,9 +5,9 @@
 1. [Feature: OpenStudioLandscapes-Flamenco-Worker](#feature-openstudiolandscapes-flamenco-worker)
    1. [Brief](#brief)
    2. [Configuration](#configuration)
-   3. [Official Resources](#official-resources)
-2. [Community](#community)
-3. [Technical Reference](#technical-reference)
+2. [Official Resources](#official-resources)
+3. [Community](#community)
+4. [Technical Reference](#technical-reference)
    1. [Requirements](#requirements)
    2. [Install](#install)
       1. [This Feature](#this-feature)
@@ -72,7 +72,7 @@ key_prefixes:
 
 ***
 
-## Official Resources
+# Official Resources
 
 [![Logo Flamenco ](https://flamenco.blender.org/brand.svg)](https://flamenco.blender.org/)
 
@@ -199,4 +199,4 @@ Currently, the following Python interpreters are enabled for testing:
 
 ***
 
-Last changed: **2025-12-19 15:51:32 UTC**.
+Last changed: **2025-12-19 16:41:28 UTC**
