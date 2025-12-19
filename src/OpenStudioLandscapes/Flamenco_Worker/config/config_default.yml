@@ -5,9 +5,6 @@ key_prefixes:
 
 #compose_scope: "worker"
 
-# Not enabled by default because this Feature
-# has some basic requirements, such as
-# the installers
-#enabled: false
+#enabled: true
 
-#deadline_10_2_worker_NUM_SERVICES: 1
+#flamenco_worker_NUM_SERVICES: 1
