@@ -244,12 +244,11 @@ def compose_flamenco_worker(
     config_engine: ConfigEngine = CONFIG.config_engine
 
     service_name_base = "flamenco-worker"
-    padding = 3
 
     docker_dict = {"services": {}}
 
     for i in range(CONFIG.flamenco_worker_NUM_SERVICES):
-        service_name = f"{service_name_base}-{str(i+1).zfill(padding)}"
+        service_name = f"{service_name_base}-{str(i+1).zfill(CONFIG.flamenco_worker_PADDING)}"
         container_name, host_name = get_docker_compose_names(
             context=context,
             service_name=service_name,
@@ -271,7 +270,7 @@ def compose_flamenco_worker(
             network_dict = {"network_mode": compose_networks["network_mode"]}
 
         storage = pathlib.Path(CONFIG.flamenco_worker_storage_expanded).joinpath(
-            host_name
+            service_name
         )
         storage.mkdir(parents=True, exist_ok=True)
 
@@ -314,28 +313,6 @@ def compose_flamenco_worker(
             # f"{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}"
         ]
 
-        # service_name = "flamenco-worker"
-        # container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
-        # host_name = ".".join(
-        #     [env["HOSTNAME"] or service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]]
-        # )
-        #
-        # docker_dict = {
-        #     "services": {}
-        # }
-        #
-        # service_name_base = "flamenco-worker"
-        # padding = 3
-        #
-        # docker_dict = {"services": {}}
-        #
-        # for i in range(NUM_SERVICES):
-        #     service_name = f"{service_name_base}-{str(i+1).zfill(padding)}"
-        #     container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
-        #     host_name = ".".join([service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]])
-
-        # deadline_command_compose_worker_runner_10_2.extend(["-name", str(service_name)])
-
         service = {
             "container_name": container_name,
             # To have a unique, dynamic hostname, we simply must not
@@ -346,8 +323,6 @@ def compose_flamenco_worker(
             "domainname": config_engine.openstudiolandscapes__domain_lan,
             # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
             "restart": DockerComposePolicies.RESTART_POLICY.ALWAYS.value,
-            # "image": "${DOT_OVERRIDES_REGISTRY_NAMESPACE:-docker.io/openstudiolandscapes}/%s:%s"
-            # % (build["image_name"], build["image_tags"][0]),
             "image": "%s%s:%s"
             % (build["image_prefixes"], build["image_name"], build["image_tags"][0]),
             "environment": {
