@@ -25,7 +25,7 @@ class Config(FeatureBaseModel):
     )
 
     flamenco_worker_NUM_SERVICES: int = Field(
-        default=5,
+        default=1,
         description="Number of workers to simulate in parallel.",
     )
 
