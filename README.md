@@ -54,7 +54,7 @@ A local config store location will be created if it doesn't exist, together with
 > OPENSTUDIOLANDSCAPES__CONFIGSTORE_ROOT="~/.config/OpenStudioLandscapes/my-custom-config-store"
 > ```
 
-The following settings are available in `OpenStudioLandscapes-Flamenco-Worker` and are accessible throughout the [`OpenStudioLandscapes-Flamenco-Worker`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/OpenStudioLandscapes/Flamenco_Worker/config/models.py) package.
+The following settings are available in `OpenStudioLandscapes-Flamenco-Worker` and are based on [`OpenStudioLandscapes-Flamenco-Worker/tree/main/OpenStudioLandscapes/Flamenco_Worker/config/models.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/OpenStudioLandscapes/Flamenco_Worker/config/models.py).
 
 ```yaml
 # ===
@@ -433,4 +433,4 @@ Currently, the following Python interpreters are enabled for testing:
 
 ***
 
-Last changed: **2025-12-23 12:54:00 UTC**
+Last changed: **2025-12-23 13:04:17 UTC**
