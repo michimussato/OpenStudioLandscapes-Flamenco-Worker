@@ -6,10 +6,10 @@ from pydantic import Field
 
 LOGGER = get_dagster_logger(__name__)
 
-from OpenStudioLandscapes.engine.config.str_gen import get_config_str
 from OpenStudioLandscapes.engine.config.models import FeatureBaseModel
+from OpenStudioLandscapes.engine.config.str_gen import get_config_str
 
-from OpenStudioLandscapes.Flamenco_Worker import dist, constants
+from OpenStudioLandscapes.Flamenco_Worker import constants, dist
 
 
 class Config(FeatureBaseModel):
@@ -57,4 +57,3 @@ class Config(FeatureBaseModel):
 CONFIG_STR = get_config_str(
     Config=Config,
 )
-

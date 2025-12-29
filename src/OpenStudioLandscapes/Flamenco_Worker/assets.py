@@ -248,7 +248,9 @@ def compose_flamenco_worker(
     docker_dict = {"services": {}}
 
     for i in range(CONFIG.flamenco_worker_NUM_SERVICES):
-        service_name = f"{service_name_base}-{str(i+1).zfill(CONFIG.flamenco_worker_PADDING)}"
+        service_name = (
+            f"{service_name_base}-{str(i+1).zfill(CONFIG.flamenco_worker_PADDING)}"
+        )
         container_name, host_name = get_docker_compose_names(
             context=context,
             service_name=service_name,
