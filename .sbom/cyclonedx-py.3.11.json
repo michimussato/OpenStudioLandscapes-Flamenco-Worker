@@ -149,7 +149,7 @@
         {
           "comment": "PackageSource: VCS 'git'",
           "type": "vcs",
-          "url": "https://github.com/michimussato/OpenStudioLandscapes#389da15a6f64c13693944b7039f408ac2ef8d09f"
+          "url": "https://github.com/michimussato/OpenStudioLandscapes#c10e57df168404418f50365a9c4961af35c1dc65"
         },
         {
           "comment": "from packaging metadata Project-URL: Homepage",
@@ -161,10 +161,10 @@
       "properties": [
         {
           "name": "cdx:python:package:source:vcs:commit_id",
-          "value": "389da15a6f64c13693944b7039f408ac2ef8d09f"
+          "value": "c10e57df168404418f50365a9c4961af35c1dc65"
         }
       ],
-      "purl": "pkg:pypi/openstudiolandscapes@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes%40389da15a6f64c13693944b7039f408ac2ef8d09f",
+      "purl": "pkg:pypi/openstudiolandscapes@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes%40c10e57df168404418f50365a9c4961af35c1dc65",
       "type": "library",
       "version": "0.0.0"
     },
@@ -175,7 +175,7 @@
         {
           "comment": "PackageSource: VCS 'git'",
           "type": "vcs",
-          "url": "https://github.com/michimussato/OpenStudioLandscapes-Flamenco#fd60894a1c18ec5b865e5ee2bd8d56780bed26e0"
+          "url": "https://github.com/michimussato/OpenStudioLandscapes-Flamenco#1e96e1d4b3fc54fe55e921b0d67777c0c3f2f0e8"
         },
         {
           "comment": "from packaging metadata Project-URL: Homepage",
@@ -187,10 +187,10 @@
       "properties": [
         {
           "name": "cdx:python:package:source:vcs:commit_id",
-          "value": "fd60894a1c18ec5b865e5ee2bd8d56780bed26e0"
+          "value": "1e96e1d4b3fc54fe55e921b0d67777c0c3f2f0e8"
         }
       ],
-      "purl": "pkg:pypi/openstudiolandscapes-flamenco@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes-Flamenco%40fd60894a1c18ec5b865e5ee2bd8d56780bed26e0",
+      "purl": "pkg:pypi/openstudiolandscapes-flamenco@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes-Flamenco%401e96e1d4b3fc54fe55e921b0d67777c0c3f2f0e8",
       "type": "library",
       "version": "0.0.0"
     },
@@ -4935,7 +4935,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2025-12-30T00:54:12.717808+00:00",
+    "timestamp": "2025-12-31T12:12:52.868673+00:00",
     "tools": {
       "components": [
         {
@@ -5039,7 +5039,7 @@
       ]
     }
   },
-  "serialNumber": "urn:uuid:7e0850a9-90c2-4be2-8ab2-18746c233de4",
+  "serialNumber": "urn:uuid:ff04196f-f71a-4757-9512-932b2ec5152d",
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
