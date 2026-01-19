@@ -1,6 +1,7 @@
 import copy
 import enum
 import pathlib
+import shutil
 import textwrap
 from typing import Any, Dict, Generator, List, Union
 
@@ -16,9 +17,9 @@ from dagster import (
     asset,
 )
 from OpenStudioLandscapes.engine.common_assets.compose import get_compose
-from OpenStudioLandscapes.engine.common_assets.compose_scope import (
-    get_compose_scope_group__cmd,
-)
+# from OpenStudioLandscapes.engine.common_assets.compose_scope import (
+#     get_compose_scope_group__cmd,
+# )
 from OpenStudioLandscapes.engine.common_assets.docker_compose_graph import (
     get_docker_compose_graph,
 )
@@ -53,9 +54,10 @@ yaml.SafeDumper.add_multi_representer(
 )
 
 
-compose_scope_group__cmd: AssetsDefinition = get_compose_scope_group__cmd(
-    ASSET_HEADER=ASSET_HEADER,
-)
+# Overridden locally
+# cmd: AssetsDefinition = get_feature__cmd(
+#     ASSET_HEADER=ASSET_HEADER,
+# )
 
 
 CONFIG: AssetsDefinition = get_feature__CONFIG(
@@ -92,7 +94,7 @@ feature_out_v2: AssetsDefinition = get_feature_out_v2(
 # Produces
 # - feature_in_parent
 # - CONFIG_PARENT
-# if ConfigParent is or type FeatureBaseModel
+# if ConfigParent is of type FeatureBaseModel
 feature_in_parent: Union[AssetsDefinition, None] = get_feature_in_parent(
     ASSET_HEADER=ASSET_HEADER,
     config_parent=ConfigParent,
@@ -271,15 +273,19 @@ def compose_flamenco_worker(
         elif "network_mode" in compose_networks:
             network_dict = {"network_mode": compose_networks["network_mode"]}
 
-        storage = pathlib.Path(CONFIG.flamenco_worker_storage_expanded).joinpath(
-            service_name
-        )
-        storage.mkdir(parents=True, exist_ok=True)
+        storage_root: pathlib.Path = CONFIG.flamenco_worker_storage_expanded
+        storage_root.mkdir(parents=True, exist_ok=True)
+
+        # storage = pathlib.Path(CONFIG.flamenco_worker_storage_expanded).joinpath(
+        #     service_name
+        # )
+        # storage.mkdir(parents=True, exist_ok=True)
 
         volumes_dict = {
             "volumes": [
                 f"{flamenco_worker_yaml.as_posix()}:/app/flamenco-worker.yaml:ro",
-                f"{storage.as_posix()}:/app/flamenco-worker-files:rw",
+                # "%s${HOSTNAME:+-S{HOSTNAME}}:/app/flamenco-worker-files:rw" % (storage_root.as_posix()),
+                # "%s/${HOSTNAME}:/app/flamenco-worker-files:rw" % (storage_root.as_posix()),
             ],
         }
 
@@ -305,6 +311,15 @@ def compose_flamenco_worker(
         volumes_dict = {
             "volumes": [
                 *_volume_relative,
+                # Add named volume for workers
+                # This is necessary because we cannot specify dynamic host mount
+                # points using environment variable specified inside the container
+                # (not yet at least). So, named volumes are an easy workaround
+                # to create container specific, persistent volumes.
+                # Data in here is probably not that important anyway - just
+                # work data for the worker. The results of computations will
+                # end up in the mounted bind volume.
+                "flamenco-worker-files:/app/flamenco-worker-files:rw",
             ],
         }
 
@@ -315,21 +330,26 @@ def compose_flamenco_worker(
             # f"{env_parent['HOSTNAME']}.{env_parent['OPENSTUDIOLANDSCAPES__DOMAIN_LAN']}:{env_parent['FLAMENCO_MANAGER_PORT_HOST']}"
         ]
 
+        # FLAMENCO_WORKER_NAME = ${HOSTNAME:+S{HOSTNAME}-}
+
         service = {
             "container_name": container_name,
             # To have a unique, dynamic hostname, we simply must not
             # specify it.
             # https://forums.docker.com/t/docker-compose-set-container-name-and-hostname-dynamicaly/138259/2
             # https://shantanoo-desai.github.io/posts/technology/hostname-docker-container/
-            "hostname": host_name,
+            # "hostname": host_name,
             "domainname": config_engine.openstudiolandscapes__domain_lan,
             # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
             "restart": DockerComposePolicies.RESTART_POLICY.ALWAYS.value,
             "image": "%s%s:%s"
             % (build["image_prefixes"], build["image_name"], build["image_tags"][0]),
             "environment": {
+                # https://www.codestudy.net/blog/how-can-i-use-environment-variables-in-docker-compose/
+                # https://docs.docker.com/reference/compose-file/interpolation/
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
-                "FLAMENCO_WORKER_NAME": host_name,
+                # "FLAMENCO_WORKER_NAME": f"${HOSTNAME}-{host_name}",
+                "FLAMENCO_WORKER_NAME": "${HOSTNAME:+S{HOSTNAME}-}%s" % container_name,
             },
             **copy.deepcopy(volumes_dict),
             **copy.deepcopy(network_dict),
@@ -342,6 +362,13 @@ def compose_flamenco_worker(
         }
 
         docker_dict["services"][service_name] = copy.deepcopy(service)
+
+    # https://docs.docker.com/engine/storage/volumes/#use-a-volume-with-docker-compose
+    docker_dict["volumes"] = {
+        "flamenco-worker-files": {
+            "external": False,
+        },
+    }
 
     docker_yaml = yaml.dump(docker_dict)
 
@@ -372,6 +399,130 @@ def compose_maps(
     ret = list(kwargs.values())
 
     context.log.info(ret)
+
+    yield Output(ret)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.json(ret),
+        },
+    )
+
+
+@asset(
+    **ASSET_HEADER,
+    ins={},
+)
+def cmd_extend(
+    context: AssetExecutionContext,
+) -> Generator[Output[List[Any]] | AssetMaterialization | Any, Any, None]:
+
+    ret = ["--detach"]
+
+    yield Output(ret)
+
+    yield AssetMaterialization(
+        asset_key=context.asset_key,
+        metadata={
+            "__".join(context.asset_key.path): MetadataValue.json(ret),
+        },
+    )
+
+
+@asset(
+    **ASSET_HEADER,
+    ins={
+        "CONFIG": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG"]),
+        ),
+        "compose": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "compose"]),
+        ),
+    },
+)
+def cmd_append(
+    context: AssetExecutionContext,
+    CONFIG: Config,  # pylint: disable=redefined-outer-name
+    compose: Dict,  # pylint: disable=redefined-outer-name,
+) -> Generator[Output[Dict[str, List[Any]]] | AssetMaterialization | Any, Any, None]:
+
+    env: Dict = CONFIG.env
+
+    ret = {"cmd": [], "exclude_from_quote": []}
+
+    compose_services = list(compose["services"].keys())
+
+    # Example cmd:
+    # /usr/bin/docker compose --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__group_out/docker_compose/docker-compose.yml --project-name 2025-04-08-10-45-09-df78673952cc4499a80407d91bd404f4-worker up --detach --remove-orphans && sudo nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001) --uts hostname "$(hostname -f)-nice-hack"
+
+    # cmd_docker_compose_up.extend(
+    #     [
+    #         # needs to be detached in order to get to do sudo
+    #         "--detach",
+    #     ]
+    # )
+
+    exclude_from_quote = []
+
+    cmd_docker_compose_set_dynamic_hostnames = []
+
+    # Transform container hostnames
+    # - deadline-10-2-worker-001...nnn
+    # - deadline-10-2-pulse-worker-001...nnn
+    # into
+    # - $(hostname)-deadline-10-2-worker-001...nnn
+    # - $(hostname)-deadline-10-2-pulse-worker-001...nnn
+    for service_name in compose_services:
+
+        target_worker = (
+            "$($(which docker) inspect -f '{{ .State.Pid }}' %s)"
+            % ".".join([service_name, env.get("LANDSCAPE", "default")])
+        )
+        hostname_worker = f"$(hostname)-{service_name}"
+
+        exclude_from_quote.extend(
+            [
+                target_worker,
+                hostname_worker,
+            ]
+        )
+
+        cmd_docker_compose_set_dynamic_hostname_worker = [
+            shutil.which("sudo"),
+            shutil.which("nsenter"),
+            "--target",
+            target_worker,
+            "--uts",
+            "hostname",
+            hostname_worker,
+        ]
+
+        # Reference:
+        # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 \
+        #     && /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker logs --follow
+        # Current:
+        # Pre
+        # /usr/bin/docker --config /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/OpenStudioLandscapes_Base__OpenStudioLandscapes_Base/OpenStudioLandscapes_Base__docker_config_json compose --progress plain --file /home/michael/git/repos/OpenStudioLandscapes/.landscapes/2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa/Deadline_10_2_Worker__Deadline_10_2_Worker/Deadline_10_2_Worker__DOCKER_COMPOSE/docker_compose/docker-compose.yml --project-name 2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa-worker up --remove-orphans --detach && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-pulse-worker-001' && /usr/bin/sudo /usr/bin/nsenter --target '$(docker inspect -f '"'"'{{ .State.Pid }}'"'"' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa)' --uts hostname '$(hostname)-deadline-10-2-worker-001'
+        # Post
+        #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-pulse-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-pulse-worker-001 && /usr/bin/sudo /usr/bin/nsenter --target $(docker inspect -f '{{ .State.Pid }}' deadline-10-2-worker-001--2025-07-23-00-51-15-1afae50517c5453b95c518ee0cd8e0aa) --uts hostname $(hostname)-deadline-10-2-worker-001
+
+        cmd_docker_compose_set_dynamic_hostnames.extend(
+            [
+                "&&",
+                *cmd_docker_compose_set_dynamic_hostname_worker,
+            ]
+        )
+
+    ret["cmd"].extend(cmd_docker_compose_set_dynamic_hostnames)
+    ret["exclude_from_quote"].extend(
+        [
+            "$(which docker)",
+            "&&",
+            ";",
+            *exclude_from_quote,
+        ]
+    )
 
     yield Output(ret)
 
