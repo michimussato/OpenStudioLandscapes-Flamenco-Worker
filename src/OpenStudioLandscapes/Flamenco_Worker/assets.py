@@ -17,9 +17,6 @@ from dagster import (
     asset,
 )
 from OpenStudioLandscapes.engine.common_assets.compose import get_compose
-# from OpenStudioLandscapes.engine.common_assets.compose_scope import (
-#     get_compose_scope_group__cmd,
-# )
 from OpenStudioLandscapes.engine.common_assets.docker_compose_graph import (
     get_docker_compose_graph,
 )
@@ -250,10 +247,19 @@ def compose_flamenco_worker(
     docker_dict = {"services": {}}
 
     for i in range(CONFIG.flamenco_worker_NUM_SERVICES):
-        service_name = (
-            f"{service_name_base}-{str(i+1).zfill(CONFIG.flamenco_worker_PADDING)}"
-        )
-        container_name, host_name = get_docker_compose_names(
+
+        if CONFIG.flamenco_worker_NUM_SERVICES == 1:
+            # Ignore incrementation
+            service_name = (
+                f"{service_name_base}"
+            )
+
+        else:
+            service_name = (
+                f"{service_name_base}-{str(i+1).zfill(CONFIG.flamenco_worker_PADDING)}"
+            )
+
+        container_name, _ = get_docker_compose_names(
             context=context,
             service_name=service_name,
             landscape_id=env.get("LANDSCAPE", "default"),
@@ -349,7 +355,8 @@ def compose_flamenco_worker(
                 # https://docs.docker.com/reference/compose-file/interpolation/
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
                 # "FLAMENCO_WORKER_NAME": f"${HOSTNAME}-{host_name}",
-                "FLAMENCO_WORKER_NAME": "${HOSTNAME:+S{HOSTNAME}-}%s" % container_name,
+                # https://stackoverflow.com/a/16296466/2207196
+                "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s" % (CONFIG.compose_scope, container_name),
             },
             **copy.deepcopy(volumes_dict),
             **copy.deepcopy(network_dict),
@@ -471,15 +478,22 @@ def cmd_append(
     # - deadline-10-2-worker-001...nnn
     # - deadline-10-2-pulse-worker-001...nnn
     # into
-    # - $(hostname)-deadline-10-2-worker-001...nnn
-    # - $(hostname)-deadline-10-2-pulse-worker-001...nnn
+    # - ${HOSTNAME}-deadline-10-2-worker-001...nnn
+    # - ${HOSTNAME}-deadline-10-2-pulse-worker-001...nnn
+    #
+    # We do this because this worker might be running on
+    # a machine which hostname we don't know at build time
+    # so the machine name needs to be extracted and forwarded
+    # to the Docker container.
+    # Note: $HOSTNAME is not defined (at least on some OSs)
+    # so we have to set it in the "up"-scripts
     for service_name in compose_services:
 
         target_worker = (
-            "$($(which docker) inspect -f '{{ .State.Pid }}' %s)"
+            "\"$($(which docker) inspect -f '{{ .State.Pid }}' %s)\""
             % ".".join([service_name, env.get("LANDSCAPE", "default")])
         )
-        hostname_worker = f"$(hostname)-{service_name}"
+        hostname_worker = f"${{HOSTNAME}}-{service_name}"
 
         exclude_from_quote.extend(
             [
