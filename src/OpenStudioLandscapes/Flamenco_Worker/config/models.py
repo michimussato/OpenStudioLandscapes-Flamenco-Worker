@@ -2,7 +2,7 @@ import pathlib
 from typing import List
 
 from dagster import get_dagster_logger
-from pydantic import Field, field_validator, PositiveInt
+from pydantic import Field, PositiveInt, field_validator
 from pydantic_core import PydanticCustomError
 
 LOGGER = get_dagster_logger(__name__)
@@ -35,14 +35,14 @@ class Config(FeatureBaseModel):
         default=pathlib.Path("{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/storage"),
     )
 
-    @field_validator('flamenco_worker_NUM_SERVICES', mode='before')
+    @field_validator("flamenco_worker_NUM_SERVICES", mode="before")
     @classmethod
     def validate_flamenco_worker_NUM_SERVICES(cls, v: int) -> int:
         if v < 1:
             raise PydanticCustomError(
-                'OneOrMoreError',
-                '{number} must be 1 or more!',
-                {'number': v},
+                "OneOrMoreError",
+                "{number} must be 1 or more!",
+                {"number": v},
             )
         return v
 

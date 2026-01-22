@@ -167,8 +167,7 @@ def flamenco_worker_yaml(
         "flamenco-worker.yaml",
     ).expanduser()
 
-    flamenco_manager_yaml_str = textwrap.dedent(
-        """\
+    flamenco_manager_yaml_str = textwrap.dedent("""\
         # Configuration file for Flamenco.
         # For an explanation of the fields, refer to flamenco-manager-example.yaml
         #
@@ -182,8 +181,7 @@ def flamenco_worker_yaml(
         
         # Optional advanced option, available on Linux only:
         oom_score_adjust: 500\
-        """
-    ).format(
+        """).format(
         manager_url=f"http://flamenco-manager.{config_engine.openstudiolandscapes__domain_lan}:{CONFIG_PARENT.flamenco_manager_port_host}",
         **env,
     )
@@ -250,9 +248,7 @@ def compose_flamenco_worker(
 
         if CONFIG.flamenco_worker_NUM_SERVICES == 1:
             # Ignore incrementation
-            service_name = (
-                f"{service_name_base}"
-            )
+            service_name = f"{service_name_base}"
 
         else:
             service_name = (
@@ -356,7 +352,8 @@ def compose_flamenco_worker(
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
                 # "FLAMENCO_WORKER_NAME": f"${HOSTNAME}-{host_name}",
                 # https://stackoverflow.com/a/16296466/2207196
-                "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s" % (CONFIG.compose_scope, container_name),
+                "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s"
+                % (CONFIG.compose_scope, container_name),
             },
             **copy.deepcopy(volumes_dict),
             **copy.deepcopy(network_dict),
