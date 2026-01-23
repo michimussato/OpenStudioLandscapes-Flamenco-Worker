@@ -3,7 +3,7 @@ project:
   name: OpenStudioLandscapes-Flamenco-Worker
   optional-dependencies:
     optional-base:
-    - OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
+    - OpenStudioLandscapes-Flamenco[optional-base] @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
     dev:
     - OpenStudioLandscapes-Flamenco-Worker[lint]
     - OpenStudioLandscapes-Flamenco-Worker[sbom]

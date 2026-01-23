@@ -55,7 +55,7 @@ lint = [
     "pylint",
 ]
 optional-base = [
-    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git",
+    "OpenStudioLandscapes-Flamenco[optional-base] @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git",
 ]
 pyproject = [
     "OpenStudioLandscapesUtil-VersionBumper @ git+https://github.com/michimussato/OpenStudioLandscapesUtil-VersionBumper.git",
