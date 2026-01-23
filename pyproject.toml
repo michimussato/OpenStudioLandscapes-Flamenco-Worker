@@ -15,8 +15,6 @@ classifiers = [
     "Programming Language :: Python",
 ]
 dependencies = [
-    "OpenStudioLandscapes @ git+https://github.com/michimussato/OpenStudioLandscapes",
-    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco",
     "PyYAML",
     "dagster==1.9.11",
     "docker-compose-graph @ git+https://github.com/michimussato/docker-compose-graph.git",
@@ -40,46 +38,36 @@ requires-python = ">=3.11"
 [project.entry-points]
 
 [project.optional-dependencies]
-coverage = [
-    "coverage",
-    "pytest",
-]
 dev = [
-    "OpenStudioLandscapes-Flamenco-Worker[coverage]",
     "OpenStudioLandscapes-Flamenco-Worker[lint]",
-    "OpenStudioLandscapes-Flamenco-Worker[nox]",
     "OpenStudioLandscapes-Flamenco-Worker[readme]",
     "OpenStudioLandscapes-Flamenco-Worker[sbom]",
-    "OpenStudioLandscapes-Flamenco-Worker[testing]",
 ]
 graphviz = [
     "graphviz",
     "pipdeptree",
 ]
 lint = [
+    "OpenStudioLandscapes-Flamenco-Worker[optional-base]",
     "black",
     "isort",
     "pre-commit",
     "pylint",
 ]
-nox = [
-    "OpenStudioLandscapes-Flamenco-Worker[testing]",
-    "nox",
+optional-base = [
+    "OpenStudioLandscapes-Flamenco @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git",
 ]
 pyproject = [
     "OpenStudioLandscapesUtil-VersionBumper @ git+https://github.com/michimussato/OpenStudioLandscapesUtil-VersionBumper.git",
 ]
 readme = [
+    "OpenStudioLandscapes-Flamenco-Worker[optional-base]",
     "OpenStudioLandscapesUtil-ReadmeGenerator @ git+https://github.com/michimussato/OpenStudioLandscapesUtil-ReadmeGenerator.git",
 ]
 sbom = [
     "OpenStudioLandscapes-Flamenco-Worker[graphviz]",
+    "OpenStudioLandscapes-Flamenco-Worker[optional-base]",
     "cyclonedx-bom",
-]
-testing = [
-    "pytest",
-    "pytest-cov",
-    "setuptools",
 ]
 
 [project.readme]
