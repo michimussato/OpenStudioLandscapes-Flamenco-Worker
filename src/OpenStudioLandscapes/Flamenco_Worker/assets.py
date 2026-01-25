@@ -147,6 +147,11 @@ def compose_networks(
             AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
         ),
     },
+    description=textwrap.dedent("""
+        Help on `flamenco-worker.yaml`:
+        - [Variables](https://flamenco.blender.org/usage/variables/)
+        - [Manager Configuration](https://flamenco.blender.org/usage/worker-configuration/)
+        """),
 )
 def flamenco_worker_yaml(
     context: AssetExecutionContext,
