@@ -54,7 +54,7 @@ class Config(FeatureBaseModel):
             raise KeyError("`env` is `None`.")
         LOGGER.debug(f"Expanding {self.flamenco_worker_storage}...")
         ret = pathlib.Path(
-            self.flamenco_worker_storage.expanduser()
+            self.flamenco_worker_storage.expanduser()  # pylint: disable=E1101
             .as_posix()
             .format(
                 **{
