@@ -313,8 +313,6 @@ def compose_flamenco_worker(
         volumes_dict = {
             "volumes": list(
                 {
-                    *_volume_relative,
-                    *config_engine.global_bind_volumes,
                     # Add named volume for workers
                     # This is necessary because we cannot specify dynamic host mount
                     # points using environment variable specified inside the container
@@ -324,6 +322,9 @@ def compose_flamenco_worker(
                     # work data for the worker. The results of computations will
                     # end up in the mounted bind volume.
                     "flamenco-worker-files:/app/flamenco-worker-files:rw",
+                    *_volume_relative,
+                    *config_engine.global_bind_volumes,
+                    *CONFIG.local_bind_volumes,
                 }
             ),
         }
@@ -358,6 +359,7 @@ def compose_flamenco_worker(
                 "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s"
                 % (CONFIG.compose_scope, container_name),
                 **config_engine.global_environment_variables,
+                **CONFIG.local_environment_variables,
             },
             **copy.deepcopy(volumes_dict),
             **copy.deepcopy(network_dict),
