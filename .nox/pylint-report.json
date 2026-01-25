@@ -624,19 +624,6 @@
         "message-id": "C0116"
     },
     {
-        "type": "error",
-        "module": "OpenStudioLandscapes.Flamenco_Worker.config.models",
-        "obj": "Config.flamenco_worker_storage_expanded",
-        "line": 57,
-        "column": 12,
-        "endLine": 57,
-        "endColumn": 51,
-        "path": "src/OpenStudioLandscapes/Flamenco_Worker/config/models.py",
-        "symbol": "no-member",
-        "message": "Instance of 'FieldInfo' has no 'expanduser' member",
-        "message-id": "E1101"
-    },
-    {
         "type": "convention",
         "module": "OpenStudioLandscapes.Flamenco_Worker.doc.readme",
         "obj": "",

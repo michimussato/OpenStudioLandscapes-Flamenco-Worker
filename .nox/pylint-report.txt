@@ -53,7 +53,6 @@ src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:16:0: C0115: Missing c
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:40:4: C0116: Missing function or method docstring (missing-function-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:40:4: C0103: Method name "validate_flamenco_worker_NUM_SERVICES" doesn't conform to snake_case naming style (invalid-name)
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:51:4: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:57:12: E1101: Instance of 'FieldInfo' has no 'expanduser' member (no-member)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.doc.readme
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
@@ -72,5 +71,5 @@ src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: R0801: Similar lines
                 Logo Flamenco\ (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 6.87/10 (previous run: 6.56/10, +0.31)
+Your code has been rated at 7.14/10 (previous run: 6.89/10, +0.26)
 
