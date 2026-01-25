@@ -311,18 +311,21 @@ def compose_flamenco_worker(
             )
 
         volumes_dict = {
-            "volumes": [
-                *_volume_relative,
-                # Add named volume for workers
-                # This is necessary because we cannot specify dynamic host mount
-                # points using environment variable specified inside the container
-                # (not yet at least). So, named volumes are an easy workaround
-                # to create container specific, persistent volumes.
-                # Data in here is probably not that important anyway - just
-                # work data for the worker. The results of computations will
-                # end up in the mounted bind volume.
-                "flamenco-worker-files:/app/flamenco-worker-files:rw",
-            ],
+            "volumes": list(
+                {
+                    *_volume_relative,
+                    *config_engine.global_bind_volumes,
+                     # Add named volume for workers
+                     # This is necessary because we cannot specify dynamic host mount
+                     # points using environment variable specified inside the container
+                     # (not yet at least). So, named volumes are an easy workaround
+                     # to create container specific, persistent volumes.
+                     # Data in here is probably not that important anyway - just
+                     # work data for the worker. The results of computations will
+                     # end up in the mounted bind volume.
+                     "flamenco-worker-files:/app/flamenco-worker-files:rw",
+                }
+            ),
         }
 
         command = [
@@ -354,6 +357,7 @@ def compose_flamenco_worker(
                 # https://stackoverflow.com/a/16296466/2207196
                 "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s"
                 % (CONFIG.compose_scope, container_name),
+                **config_engine.global_environment_variables,
             },
             **copy.deepcopy(volumes_dict),
             **copy.deepcopy(network_dict),
