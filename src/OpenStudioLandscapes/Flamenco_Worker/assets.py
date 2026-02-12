@@ -221,6 +221,9 @@ def flamenco_worker_yaml(
         "CONFIG": AssetIn(
             AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG"]),
         ),
+        "CONFIG_PARENT": AssetIn(
+            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
+        ),
         "build": AssetIn(
             AssetKey([*ASSET_HEADER_FEATURE_IN["key_prefix"], "build_docker_image"]),
         ),
@@ -236,6 +239,7 @@ def compose_flamenco_worker(
     context: AssetExecutionContext,
     build: Dict,  # pylint: disable=redefined-outer-name
     CONFIG: Config,  # pylint: disable=redefined-outer-name
+    CONFIG_PARENT: ConfigParent,  # pylint: disable=redefined-outer-name
     compose_networks: Dict,  # pylint: disable=redefined-outer-name
     flamenco_worker_yaml: pathlib.Path,  # pylint: disable=redefined-outer-name
 ) -> Generator[Output[Dict] | AssetMaterialization, None, None]:
@@ -280,8 +284,8 @@ def compose_flamenco_worker(
         elif "network_mode" in compose_networks:
             network_dict = {"network_mode": compose_networks["network_mode"]}
 
-        storage_root: pathlib.Path = CONFIG.flamenco_worker_storage_expanded
-        storage_root.mkdir(parents=True, exist_ok=True)
+        shared_storage: pathlib.Path = CONFIG_PARENT.flamenco_shared_storage_expanded
+        shared_storage.mkdir(parents=True, exist_ok=True)
 
         # storage = pathlib.Path(CONFIG.flamenco_worker_storage_expanded).joinpath(
         #     service_name
@@ -291,6 +295,7 @@ def compose_flamenco_worker(
         volumes_dict = {
             "volumes": [
                 f"{flamenco_worker_yaml.as_posix()}:/app/flamenco-worker.yaml:ro",
+                f"{shared_storage.as_posix()}:/app/flamenco-manager-storage-shared:rw",
                 # "%s${HOSTNAME:+-S{HOSTNAME}}:/app/flamenco-worker-files:rw" % (storage_root.as_posix()),
                 # "%s/${HOSTNAME}:/app/flamenco-worker-files:rw" % (storage_root.as_posix()),
             ],
