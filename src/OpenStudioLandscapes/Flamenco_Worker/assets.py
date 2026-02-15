@@ -361,7 +361,7 @@ def compose_flamenco_worker(
             "image": "%s%s:%s"
             % (build["image_prefixes"], build["image_name"], build["image_tags"][0]),
             "environment": {
-                "TZ": CONFIG.tz,
+                "TZ": config_engine.tz,
                 # https://www.codestudy.net/blog/how-can-i-use-environment-variables-in-docker-compose/
                 # https://docs.docker.com/reference/compose-file/interpolation/
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
