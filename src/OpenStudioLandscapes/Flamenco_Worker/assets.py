@@ -325,7 +325,7 @@ def compose_flamenco_worker(
                 {
                     # Add named volume for workers
                     # This is necessary because we cannot specify dynamic host mount
-                    # points using environment variable specified inside the container
+                    # points using environment variables specified inside the container
                     # (not yet at least). So, named volumes are an easy workaround
                     # to create container specific, persistent volumes.
                     # Data in here is probably not that important anyway - just
