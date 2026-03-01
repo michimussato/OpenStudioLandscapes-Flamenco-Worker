@@ -1,6 +1,7 @@
 import copy
 import enum
 import pathlib
+import shlex
 import shutil
 import textwrap
 from typing import Any, Dict, Generator, List, Union
@@ -505,19 +506,36 @@ def cmd_append(
 
         container_name = ".".join([service_name, env.get("LANDSCAPE", "default")])
 
+        # /usr/bin/sudo --stdin /usr/bin/nsenter --target "$($(which docker) inspect --format '{{ .State.Pid }}' deadline-10-2-pulse-worker.2026-03-01_09-00-46__insidious-rift-unmarred-tsunami)" --uts hostname ${HOSTNAME}-deadline-10-2-pulse-worker || echo 'could not set hostname for deadline-10-2-pulse-worker.2026-03-01_09-00-46__insidious-rift-unmarred-tsunami' \
         target_worker = (
             "\"$($(which docker) inspect --format '{{ .State.Pid }}' %s)\""
             % container_name
         )
+
+        # && while [ ! "$(docker inspect -f '{{.State.Running}}' deadline-10-2-pulse-worker.2026-03-01_09-00-46__insidious-rift-unmarred-tsunami)" = "true" ]; do echo "Starting..."; sleep 0.1; done \
+        check_running_target_worker = (
+            "\"$($(which docker) inspect --format '{{ .State.Running }}' %s)\""
+            % container_name
+        )
+
         hostname_worker = f"${{HOSTNAME}}-{service_name}"
 
         exclude_from_quote.extend(
             [
+                check_running_target_worker,
                 target_worker,
                 hostname_worker,
             ]
         )
 
+        cmd_docker_compose_set_dynamic_hostname_worker_ = shlex.split(
+                textwrap.dedent(
+                f"""
+                {shutil.which("sudo")} --stdin {shutil.which("nsenter")} --target {target_worker} --uts hostname {hostname_worker}
+                """
+            )
+        )
+        context.log.debug(cmd_docker_compose_set_dynamic_hostname_worker_)
         cmd_docker_compose_set_dynamic_hostname_worker = [
             shutil.which("sudo"),
             "--stdin",
@@ -527,6 +545,33 @@ def cmd_append(
             "--uts",
             "hostname",
             hostname_worker,
+        ]
+
+        cmd_docker_compose_check_running_worker_ = shlex.split(
+            textwrap.dedent(
+                f"""
+                while [ ! {check_running_target_worker} = "true" ] ; do echo "Starting Container..." ; sleep 0.1 ; done
+                """
+            )
+        )
+        context.log.debug(cmd_docker_compose_check_running_worker_)
+        cmd_docker_compose_check_running_worker = [
+            "while",
+            "[",
+            "!",
+            check_running_target_worker,
+            "=",
+            "true",
+            "]",
+            ";",
+            "do",
+            "echo",
+            "Starting...",
+            ";",
+            "sleep",
+            "0.1",
+            ";",
+            "done",
         ]
 
         # Reference:
@@ -540,11 +585,16 @@ def cmd_append(
 
         cmd_docker_compose_set_dynamic_hostnames.extend(
             [
+                "\\\n",
+                "&&",
+                *cmd_docker_compose_check_running_worker,
+                "\\\n",
                 "&&",
                 *cmd_docker_compose_set_dynamic_hostname_worker,
                 "||",
                 "echo",
                 f"could not set hostname for {container_name}",
+                "\\\n",
             ]
         )
 
@@ -555,6 +605,11 @@ def cmd_append(
             "&&",
             ";",
             "||",
+            "[",
+            "]",
+            "=",
+            "!",
+            '\\\n',
             *exclude_from_quote,
         ]
     )
