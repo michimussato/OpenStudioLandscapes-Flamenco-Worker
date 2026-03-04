@@ -366,6 +366,9 @@ def compose_flamenco_worker(
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
                 # "FLAMENCO_WORKER_NAME": f"${HOSTNAME}-{host_name}",
                 # https://stackoverflow.com/a/16296466/2207196
+                # Todo
+                #  - [ ] Is this still necessary now that we *can*
+                #        specify the worker hostname at runtime?
                 "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s"
                 % (CONFIG.compose_scope, container_name),
                 **config_engine.global_environment_variables,
