@@ -334,6 +334,7 @@ def compose_flamenco_worker(
                     *_volume_relative,
                     *config_engine.global_bind_volumes,
                     *CONFIG.local_bind_volumes,
+                    *config_engine.openstudiolandscapes__rez_config.REZ_PACKAGES_PATH_VOL,
                 }
             ),
         }
@@ -367,12 +368,14 @@ def compose_flamenco_worker(
                 # "FLAMENCO_WORKER_NAME": f"${HOSTNAME}-{host_name}",
                 # https://stackoverflow.com/a/16296466/2207196
                 # Todo
-                #  - [ ] Is this still necessary now that we *can*
+                #  - [ ] Is this still necessary now that we *
+                #  can*
                 #        specify the worker hostname at runtime?
                 "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s"
                 % (CONFIG.compose_scope, container_name),
                 **config_engine.global_environment_variables,
                 **CONFIG.local_environment_variables,
+                **config_engine.openstudiolandscapes__rez_config.REZ_ENVIRONMENT,
             },
             **copy.deepcopy(volumes_dict),
             **copy.deepcopy(network_dict),
