@@ -149,7 +149,7 @@
         {
           "comment": "PackageSource: VCS 'git'",
           "type": "vcs",
-          "url": "https://github.com/michimussato/OpenStudioLandscapes.git#c674ebe21ee19f2b5ff383703d1daf9c3fb70748"
+          "url": "https://github.com/michimussato/OpenStudioLandscapes.git#c4dc9a02f56727f3e1a279b05f4943ab7976643b"
         },
         {
           "comment": "from packaging metadata Project-URL: Homepage",
@@ -161,10 +161,10 @@
       "properties": [
         {
           "name": "cdx:python:package:source:vcs:commit_id",
-          "value": "c674ebe21ee19f2b5ff383703d1daf9c3fb70748"
+          "value": "c4dc9a02f56727f3e1a279b05f4943ab7976643b"
         }
       ],
-      "purl": "pkg:pypi/openstudiolandscapes@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes.git%40c674ebe21ee19f2b5ff383703d1daf9c3fb70748",
+      "purl": "pkg:pypi/openstudiolandscapes@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes.git%40c4dc9a02f56727f3e1a279b05f4943ab7976643b",
       "type": "library",
       "version": "0.0.0"
     },
@@ -175,7 +175,7 @@
         {
           "comment": "PackageSource: VCS 'git'",
           "type": "vcs",
-          "url": "https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git#b42cc95c73855b31e2e9be3281ba0f05cdc136e6"
+          "url": "https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git#f1d54e47a9aa9b7cd8ad904181345c6d1ef8ec15"
         },
         {
           "comment": "from packaging metadata Project-URL: Homepage",
@@ -191,10 +191,10 @@
         },
         {
           "name": "cdx:python:package:source:vcs:commit_id",
-          "value": "b42cc95c73855b31e2e9be3281ba0f05cdc136e6"
+          "value": "f1d54e47a9aa9b7cd8ad904181345c6d1ef8ec15"
         }
       ],
-      "purl": "pkg:pypi/openstudiolandscapes-flamenco@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes-Flamenco.git%40b42cc95c73855b31e2e9be3281ba0f05cdc136e6",
+      "purl": "pkg:pypi/openstudiolandscapes-flamenco@0.0.0?vcs_url=git%2Bhttps://github.com/michimussato/OpenStudioLandscapes-Flamenco.git%40f1d54e47a9aa9b7cd8ad904181345c6d1ef8ec15",
       "type": "library",
       "version": "0.0.0"
     },
@@ -482,7 +482,7 @@
       "version": "4.13.2"
     },
     {
-      "bom-ref": "anyio==4.12.1",
+      "bom-ref": "anyio==4.13.0",
       "description": "High-level concurrency and networking framework on top of asyncio or Trio",
       "externalReferences": [
         {
@@ -515,9 +515,9 @@
         }
       ],
       "name": "anyio",
-      "purl": "pkg:pypi/anyio@4.12.1",
+      "purl": "pkg:pypi/anyio@4.13.0",
       "type": "library",
-      "version": "4.12.1"
+      "version": "4.13.0"
     },
     {
       "bom-ref": "argcomplete==3.6.3",
@@ -596,7 +596,7 @@
       "version": "1.4.0"
     },
     {
-      "bom-ref": "attrs==25.4.0",
+      "bom-ref": "attrs==26.1.0",
       "description": "Classes Without Boilerplate",
       "externalReferences": [
         {
@@ -634,9 +634,9 @@
         }
       ],
       "name": "attrs",
-      "purl": "pkg:pypi/attrs@25.4.0",
+      "purl": "pkg:pypi/attrs@26.1.0",
       "type": "library",
-      "version": "25.4.0"
+      "version": "26.1.0"
     },
     {
       "bom-ref": "backoff==2.2.1",
@@ -943,7 +943,7 @@
       "version": "7.2.2"
     },
     {
-      "bom-ref": "cyclonedx-python-lib==11.6.0",
+      "bom-ref": "cyclonedx-python-lib==11.7.0",
       "description": "Python library for CycloneDX",
       "externalReferences": [
         {
@@ -998,9 +998,9 @@
           "value": "validation"
         }
       ],
-      "purl": "pkg:pypi/cyclonedx-python-lib@11.6.0",
+      "purl": "pkg:pypi/cyclonedx-python-lib@11.7.0",
       "type": "library",
-      "version": "11.6.0"
+      "version": "11.7.0"
     },
     {
       "bom-ref": "dagster==1.9.11",
@@ -2047,7 +2047,7 @@
       "version": "20.11.0"
     },
     {
-      "bom-ref": "jsonpointer==3.0.0",
+      "bom-ref": "jsonpointer==3.1.1",
       "description": "Identify specific nodes in a JSON document (RFC 6901) ",
       "externalReferences": [
         {
@@ -2065,9 +2065,9 @@
         }
       ],
       "name": "jsonpointer",
-      "purl": "pkg:pypi/jsonpointer@3.0.0",
+      "purl": "pkg:pypi/jsonpointer@3.1.1",
       "type": "library",
-      "version": "3.0.0"
+      "version": "3.1.1"
     },
     {
       "bom-ref": "jsonschema==4.26.0",
@@ -2538,13 +2538,13 @@
       "version": "32.0.1"
     },
     {
-      "bom-ref": "pipdeptree==2.31.0",
+      "bom-ref": "pipdeptree==2.34.0",
       "description": "Command line utility to show dependency tree of packages.",
       "externalReferences": [
         {
           "comment": "from packaging metadata Project-URL: Documentation",
           "type": "documentation",
-          "url": "https://github.com/tox-dev/pipdeptree/blob/main/README.md#pipdeptree"
+          "url": "https://pipdeptree.readthedocs.io"
         },
         {
           "comment": "from packaging metadata Project-URL: Tracker",
@@ -2576,9 +2576,9 @@
         }
       ],
       "name": "pipdeptree",
-      "purl": "pkg:pypi/pipdeptree@2.31.0",
+      "purl": "pkg:pypi/pipdeptree@2.34.0",
       "type": "library",
-      "version": "2.31.0"
+      "version": "2.34.0"
     },
     {
       "bom-ref": "platformdirs==4.9.4",
@@ -2985,7 +2985,7 @@
       "version": "2.9.0.post0"
     },
     {
-      "bom-ref": "python-discovery==1.1.3",
+      "bom-ref": "python-discovery==1.2.1",
       "description": "Python interpreter discovery",
       "externalReferences": [
         {
@@ -3023,9 +3023,9 @@
         }
       ],
       "name": "python-discovery",
-      "purl": "pkg:pypi/python-discovery@1.1.3",
+      "purl": "pkg:pypi/python-discovery@1.2.1",
       "type": "library",
-      "version": "1.1.3"
+      "version": "1.2.1"
     },
     {
       "bom-ref": "python-dotenv==1.2.2",
@@ -3132,7 +3132,7 @@
       "version": "0.37.0"
     },
     {
-      "bom-ref": "requests==2.32.5",
+      "bom-ref": "requests==2.33.0",
       "description": "Python HTTP for Humans.",
       "externalReferences": [
         {
@@ -3144,11 +3144,6 @@
           "comment": "from packaging metadata Project-URL: Source",
           "type": "other",
           "url": "https://github.com/psf/requests"
-        },
-        {
-          "comment": "from packaging metadata: Home-page",
-          "type": "website",
-          "url": "https://requests.readthedocs.io"
         }
       ],
       "licenses": [
@@ -3166,9 +3161,9 @@
         }
       ],
       "name": "requests",
-      "purl": "pkg:pypi/requests@2.32.5",
+      "purl": "pkg:pypi/requests@2.33.0",
       "type": "library",
-      "version": "2.32.5"
+      "version": "2.33.0"
     },
     {
       "bom-ref": "requests-toolbelt==1.0.0",
@@ -3477,7 +3472,7 @@
       "version": "2.4.0"
     },
     {
-      "bom-ref": "starlette==0.52.1",
+      "bom-ref": "starlette==1.0.0",
       "description": "The little ASGI library that shines.",
       "externalReferences": [
         {
@@ -3521,9 +3516,9 @@
           "value": "full"
         }
       ],
-      "purl": "pkg:pypi/starlette@0.52.1",
+      "purl": "pkg:pypi/starlette@1.0.0",
       "type": "library",
-      "version": "0.52.1"
+      "version": "1.0.0"
     },
     {
       "bom-ref": "structlog==25.5.0",
@@ -3605,7 +3600,7 @@
       "version": "0.10.0"
     },
     {
-      "bom-ref": "tomli==2.4.0",
+      "bom-ref": "tomli==2.4.1",
       "description": "A lil' TOML parser",
       "externalReferences": [
         {
@@ -3628,9 +3623,9 @@
         }
       ],
       "name": "tomli",
-      "purl": "pkg:pypi/tomli@2.4.0",
+      "purl": "pkg:pypi/tomli@2.4.1",
       "type": "library",
-      "version": "2.4.0"
+      "version": "2.4.1"
     },
     {
       "bom-ref": "toposort==1.10",
@@ -4320,7 +4315,7 @@
         "docker-compose-graph==1.0.0.post1.dev5+ga91125bef",
         "email-validator==2.3.0",
         "graphviz==0.21",
-        "pipdeptree==2.31.0"
+        "pipdeptree==2.34.0"
       ],
       "ref": "OpenStudioLandscapes-Flamenco-Worker==0.0.0"
     },
@@ -4335,7 +4330,7 @@
         "docker-compose-graph==1.0.0.post1.dev5+ga91125bef",
         "email-validator==2.3.0",
         "graphviz==0.21",
-        "pipdeptree==2.31.0"
+        "pipdeptree==2.34.0"
       ],
       "ref": "OpenStudioLandscapes-Flamenco==0.0.0"
     },
@@ -4353,7 +4348,7 @@
         "graphviz==0.21",
         "human-readable-id==0.0.3",
         "nox==2026.2.9",
-        "pipdeptree==2.31.0",
+        "pipdeptree==2.34.0",
         "pydot==4.0.1"
       ],
       "ref": "OpenStudioLandscapes==0.0.0"
@@ -4379,7 +4374,7 @@
       "dependsOn": [
         "Mako==1.3.10",
         "SQLAlchemy==2.0.48",
-        "tomli==2.4.0",
+        "tomli==2.4.1",
         "typing_extensions==4.15.0",
         "tzdata==2025.3"
       ],
@@ -4399,7 +4394,7 @@
         "idna==3.11",
         "typing_extensions==4.15.0"
       ],
-      "ref": "anyio==4.12.1"
+      "ref": "anyio==4.13.0"
     },
     {
       "dependsOn": [
@@ -4416,7 +4411,7 @@
       "ref": "arrow==1.4.0"
     },
     {
-      "ref": "attrs==25.4.0"
+      "ref": "attrs==26.1.0"
     },
     {
       "ref": "backoff==2.2.1"
@@ -4448,11 +4443,11 @@
     {
       "dependsOn": [
         "chardet==5.2.0",
-        "cyclonedx-python-lib==11.6.0",
+        "cyclonedx-python-lib==11.7.0",
         "packageurl-python==0.17.6",
         "packaging==26.0",
         "pip-requirements-parser==32.0.1",
-        "tomli==2.4.0"
+        "tomli==2.4.1"
       ],
       "ref": "cyclonedx-bom==7.2.2"
     },
@@ -4467,15 +4462,15 @@
         "sortedcontainers==2.4.0",
         "typing_extensions==4.15.0"
       ],
-      "ref": "cyclonedx-python-lib==11.6.0"
+      "ref": "cyclonedx-python-lib==11.7.0"
     },
     {
       "dependsOn": [
         "dagster==1.9.11",
         "gql==3.5.3",
         "graphene==3.4.3",
-        "requests==2.32.5",
-        "starlette==0.52.1"
+        "requests==2.33.0",
+        "starlette==1.0.0"
       ],
       "ref": "dagster-graphql==1.9.11"
     },
@@ -4494,7 +4489,7 @@
         "click==8.3.1",
         "dagster-graphql==1.9.11",
         "dagster==1.9.11",
-        "starlette==0.52.1",
+        "starlette==1.0.0",
         "uvicorn==0.42.0"
       ],
       "ref": "dagster-webserver==1.9.11"
@@ -4519,13 +4514,13 @@
         "pydantic==2.12.5",
         "python-dotenv==1.2.2",
         "pytz==2026.1.post1",
-        "requests==2.32.5",
+        "requests==2.33.0",
         "rich==14.3.3",
         "setuptools==82.0.1",
         "six==1.17.0",
         "structlog==25.5.0",
         "tabulate==0.10.0",
-        "tomli==2.4.0",
+        "tomli==2.4.1",
         "toposort==1.10",
         "tqdm==4.67.3",
         "typing_extensions==4.15.0",
@@ -4541,7 +4536,7 @@
     {
       "dependsOn": [
         "packaging==26.0",
-        "tomli==2.4.0"
+        "tomli==2.4.1"
       ],
       "ref": "dependency-groups==1.3.1"
     },
@@ -4585,7 +4580,7 @@
     {
       "dependsOn": [
         "Jinja2==3.1.6",
-        "requests==2.32.5",
+        "requests==2.33.0",
         "tqdm==4.67.3",
         "urllib3==2.6.3",
         "yarl==1.23.0"
@@ -4600,11 +4595,11 @@
     },
     {
       "dependsOn": [
-        "anyio==4.12.1",
+        "anyio==4.13.0",
         "backoff==2.2.1",
         "graphql-core==3.2.6",
         "requests-toolbelt==1.0.0",
-        "requests==2.32.5",
+        "requests==2.33.0",
         "websockets==16.0",
         "yarl==1.23.0"
       ],
@@ -4682,7 +4677,7 @@
       "ref": "isoduration==20.11.0"
     },
     {
-      "ref": "jsonpointer==3.0.0"
+      "ref": "jsonpointer==3.1.1"
     },
     {
       "dependsOn": [
@@ -4692,11 +4687,11 @@
     },
     {
       "dependsOn": [
-        "attrs==25.4.0",
+        "attrs==26.1.0",
         "fqdn==1.5.1",
         "idna==3.11",
         "isoduration==20.11.0",
-        "jsonpointer==3.0.0",
+        "jsonpointer==3.1.1",
         "jsonschema-specifications==2025.9.1",
         "referencing==0.37.0",
         "rfc3339-validator==0.1.4",
@@ -4724,7 +4719,7 @@
       "dependsOn": [
         "PyYAML==6.0.3",
         "mdurl==0.1.2",
-        "requests==2.32.5"
+        "requests==2.33.0"
       ],
       "ref": "markdown-it-py==4.0.0"
     },
@@ -4741,12 +4736,12 @@
       "dependsOn": [
         "Jinja2==3.1.6",
         "argcomplete==3.6.3",
-        "attrs==25.4.0",
+        "attrs==26.1.0",
         "colorlog==6.10.1",
         "dependency-groups==1.3.1",
         "humanize==4.15.0",
         "packaging==26.0",
-        "tomli==2.4.0",
+        "tomli==2.4.1",
         "virtualenv==21.2.0"
       ],
       "ref": "nox==2026.2.9"
@@ -4779,10 +4774,10 @@
       "dependsOn": [
         "graphviz==0.21",
         "packaging==26.0",
-        "pip==26.0.1",
+        "rich==14.3.3",
         "virtualenv==21.2.0"
       ],
-      "ref": "pipdeptree==2.31.0"
+      "ref": "pipdeptree==2.34.0"
     },
     {
       "ref": "platformdirs==4.9.4"
@@ -4844,7 +4839,7 @@
         "platformdirs==4.9.4",
         "setuptools==82.0.1"
       ],
-      "ref": "python-discovery==1.1.3"
+      "ref": "python-discovery==1.2.1"
     },
     {
       "dependsOn": [
@@ -4857,7 +4852,7 @@
     },
     {
       "dependsOn": [
-        "attrs==25.4.0",
+        "attrs==26.1.0",
         "rpds-py==0.30.0",
         "typing_extensions==4.15.0"
       ],
@@ -4865,7 +4860,7 @@
     },
     {
       "dependsOn": [
-        "requests==2.32.5"
+        "requests==2.33.0"
       ],
       "ref": "requests-toolbelt==1.0.0"
     },
@@ -4877,7 +4872,7 @@
         "idna==3.11",
         "urllib3==2.6.3"
       ],
-      "ref": "requests==2.32.5"
+      "ref": "requests==2.33.0"
     },
     {
       "dependsOn": [
@@ -4909,7 +4904,7 @@
         "filelock==3.25.2",
         "packaging==26.0",
         "pip==26.0.1",
-        "tomli==2.4.0",
+        "tomli==2.4.1",
         "virtualenv==21.2.0",
         "wheel==0.46.3"
       ],
@@ -4928,10 +4923,10 @@
       "dependsOn": [
         "Jinja2==3.1.6",
         "PyYAML==6.0.3",
-        "anyio==4.12.1",
+        "anyio==4.13.0",
         "typing_extensions==4.15.0"
       ],
-      "ref": "starlette==0.52.1"
+      "ref": "starlette==1.0.0"
     },
     {
       "dependsOn": [
@@ -4943,14 +4938,14 @@
       "ref": "tabulate==0.10.0"
     },
     {
-      "ref": "tomli==2.4.0"
+      "ref": "tomli==2.4.1"
     },
     {
       "ref": "toposort==1.10"
     },
     {
       "dependsOn": [
-        "requests==2.32.5"
+        "requests==2.33.0"
       ],
       "ref": "tqdm==4.67.3"
     },
@@ -5007,7 +5002,7 @@
         "distlib==0.4.0",
         "filelock==3.25.2",
         "platformdirs==4.9.4",
-        "python-discovery==1.1.3",
+        "python-discovery==1.2.1",
         "typing_extensions==4.15.0"
       ],
       "ref": "virtualenv==21.2.0"
@@ -5020,7 +5015,7 @@
     },
     {
       "dependsOn": [
-        "anyio==4.12.1"
+        "anyio==4.13.0"
       ],
       "ref": "watchfiles==1.1.1"
     },
@@ -5047,7 +5042,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2026-03-17T14:10:41.684283+00:00",
+    "timestamp": "2026-03-26T23:40:09.907520+00:00",
     "tools": {
       "components": [
         {
@@ -5146,12 +5141,12 @@
           ],
           "name": "cyclonedx-python-lib",
           "type": "library",
-          "version": "11.6.0"
+          "version": "11.7.0"
         }
       ]
     }
   },
-  "serialNumber": "urn:uuid:ec930225-a80a-47c5-a6c3-0c14ec351379",
+  "serialNumber": "urn:uuid:a87ba167-5a87-4e57-8c0b-d00ce3c26c73",
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
