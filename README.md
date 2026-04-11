@@ -8,7 +8,7 @@
       1. [Clone and Install](#clone-and-install)
    3. [Configure](#configure)
       1. [Default Configuration](#default-configuration)
-   4. [Local Development](#local-development)
+   4. [Local Development/Unit Testing/Debugging](#local-developmentunit-testingdebugging)
 2. [External Resources](#external-resources)
 3. [Community](#community)
 
@@ -72,7 +72,7 @@ A local config store location will be created if it doesn't exist, together with
 > controlled repository. This makes it easy to track changes
 > you made to the `config.yml`.
 
-The following settings are available in `OpenStudioLandscapes-Flamenco-Worker` and are based on [`OpenStudioLandscapes-Flamenco-Worker/tree/main/OpenStudioLandscapes/Flamenco_Worker/config/models.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/OpenStudioLandscapes/Flamenco_Worker/config/models.py).
+The following settings are available in `OpenStudioLandscapes-Flamenco-Worker` and are based on [`OpenStudioLandscapes-Flamenco-Worker/tree/main/src/OpenStudioLandscapes/Flamenco_Worker/config/models.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/src/OpenStudioLandscapes/Flamenco_Worker/config/models.py).
 
 ### Default Configuration
 
@@ -351,10 +351,12 @@ flamenco_worker_storage: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/storage'
 </details>
 
 
-## Local Development
+## Local Development/Unit Testing/Debugging
+
+This is for isolated development, unit testing and debugging. Instead of the [`OpenStudioLandscapes-Flamenco-Worker/tree/main/src/OpenStudioLandscapes/Flamenco_Worker/definitions.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/src/OpenStudioLandscapes/Flamenco_Worker/definitions.py), the accompanying [`OpenStudioLandscapes-Flamenco-Worker/tree/main/workspace.yaml`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/workspace.yaml) loads the [`OpenStudioLandscapes-Flamenco-Worker/tree/main/src/OpenStudioLandscapes/Flamenco_Worker/_definitions_with_upstream_specs.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/tree/main/src/OpenStudioLandscapes/Flamenco_Worker/_definitions_with_upstream_specs.py) which also contains [`AssetSpec`](https://release-1-9-13.archive.dagster-docs.io/api/dagster/assets#dagster.AssetSpec) definitions for upstream dependencies as [external assets](https://release-1-9-13.archive.dagster-docs.io/guides/build/assets/external-assets).
 
 ```shell
-cd ./.features/OpenStudioLandscapes-Flamenco-Worker
+# cd ./.features/OpenStudioLandscapes-Flamenco-Worker
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip setuptools setuptools_scm wheel
@@ -402,4 +404,4 @@ To follow up on the previous LinkedIn publications, visit:
 
 ***
 
-Last changed: **2026-04-11 01:57:34 UTC**
+Last changed: **2026-04-11 11:20:27 UTC**
