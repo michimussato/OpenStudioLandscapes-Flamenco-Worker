@@ -30,6 +30,8 @@ src/OpenStudioLandscapes/Flamenco_Worker/assets.py:37:0: W0614: Unused import(s)
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:47:0: W0614: Unused import(s) GROUP and KEY from wildcard import of OpenStudioLandscapes.Flamenco_Worker.constants (unused-wildcard-import)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.definitions
 src/OpenStudioLandscapes/Flamenco_Worker/definitions.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/definitions.py:5:0: E0401: Unable to import 'OpenStudioLandscapes.engine.features.upstream_asset_specs' (import-error)
+src/OpenStudioLandscapes/Flamenco_Worker/definitions.py:5:0: E0611: No name 'features' in module 'OpenStudioLandscapes.engine' (no-name-in-module)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.readme_feature
 src/OpenStudioLandscapes/Flamenco_Worker/readme_feature.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/readme_feature.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
@@ -68,5 +70,5 @@ src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: R0801: Similar lines
                 Logo Flamenco\ (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 7.01/10 (previous run: 6.93/10, +0.08)
+Your code has been rated at 6.42/10 (previous run: 6.67/10, -0.24)
 
