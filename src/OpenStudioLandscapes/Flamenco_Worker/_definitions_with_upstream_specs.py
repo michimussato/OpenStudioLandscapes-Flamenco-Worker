@@ -9,10 +9,6 @@ from OpenStudioLandscapes.Flamenco.assets import (
     build_docker_image,
 )
 
-# The visualized DAG is cleaner when using `build_docker_image_spec`
-# instead of `build_docker_image.specs` - yet they should be
-# equivalent
-
 assets_external = []
 assets_external.extend(group_out_base.specs)
 assets_external.extend(build_docker_image.specs)
