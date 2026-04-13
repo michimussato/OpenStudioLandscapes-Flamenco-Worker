@@ -390,32 +390,6 @@
         "message-id": "C0114"
     },
     {
-        "type": "error",
-        "module": "OpenStudioLandscapes.Flamenco_Worker.definitions",
-        "obj": "",
-        "line": 5,
-        "column": 0,
-        "endLine": 5,
-        "endColumn": 85,
-        "path": "src/OpenStudioLandscapes/Flamenco_Worker/definitions.py",
-        "symbol": "import-error",
-        "message": "Unable to import 'OpenStudioLandscapes.engine.features.upstream_asset_specs'",
-        "message-id": "E0401"
-    },
-    {
-        "type": "error",
-        "module": "OpenStudioLandscapes.Flamenco_Worker.definitions",
-        "obj": "",
-        "line": 5,
-        "column": 0,
-        "endLine": 5,
-        "endColumn": 85,
-        "path": "src/OpenStudioLandscapes/Flamenco_Worker/definitions.py",
-        "symbol": "no-name-in-module",
-        "message": "No name 'features' in module 'OpenStudioLandscapes.engine'",
-        "message-id": "E0611"
-    },
-    {
         "type": "convention",
         "module": "OpenStudioLandscapes.Flamenco_Worker.readme_feature",
         "obj": "",
@@ -476,6 +450,19 @@
         "endLine": null,
         "endColumn": null,
         "path": "src/OpenStudioLandscapes/Flamenco_Worker/constants.py",
+        "symbol": "missing-module-docstring",
+        "message": "Missing module docstring",
+        "message-id": "C0114"
+    },
+    {
+        "type": "convention",
+        "module": "OpenStudioLandscapes.Flamenco_Worker._definitions_with_upstream_specs",
+        "obj": "",
+        "line": 1,
+        "column": 0,
+        "endLine": null,
+        "endColumn": null,
+        "path": "src/OpenStudioLandscapes/Flamenco_Worker/_definitions_with_upstream_specs.py",
         "symbol": "missing-module-docstring",
         "message": "Missing module docstring",
         "message-id": "C0114"
