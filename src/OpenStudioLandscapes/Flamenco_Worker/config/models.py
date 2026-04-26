@@ -2,7 +2,12 @@ import pathlib
 from typing import List
 
 from dagster import get_dagster_logger
-from pydantic import Field, PositiveInt, field_validator
+from pydantic import (
+    Field,
+    PositiveInt,
+    field_validator,
+    computed_field,
+)
 from pydantic_core import PydanticCustomError
 
 LOGGER = get_dagster_logger(__name__)
@@ -46,6 +51,7 @@ class Config(FeatureBaseModel):
         return v
 
     # EXPANDABLE PATHS
+    @computed_field
     @property
     def flamenco_worker_storage_expanded(self) -> pathlib.Path:
         LOGGER.debug(f"{self.env = }")
