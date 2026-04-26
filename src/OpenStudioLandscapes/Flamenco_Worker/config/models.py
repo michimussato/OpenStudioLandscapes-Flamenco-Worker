@@ -6,7 +6,7 @@ from pydantic import (
     Field,
     PositiveInt,
     field_validator,
-    computed_field,
+    # computed_field,
 )
 from pydantic_core import PydanticCustomError
 
@@ -51,7 +51,7 @@ class Config(FeatureBaseModel):
         return v
 
     # EXPANDABLE PATHS
-    @computed_field
+    # @computed_field
     @property
     def flamenco_worker_storage_expanded(self) -> pathlib.Path:
         LOGGER.debug(f"{self.env = }")
