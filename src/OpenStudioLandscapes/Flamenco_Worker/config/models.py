@@ -1,7 +1,6 @@
 import pathlib
 from typing import List
 
-from dagster import get_dagster_logger
 from pydantic import (
     Field,
     PositiveInt,
@@ -9,10 +8,7 @@ from pydantic import (
 )
 from pydantic_core import PydanticCustomError
 
-from OpenStudioLandscapes.cli import LOGGING_LEVEL_DEFAULT
-
-LOGGER = get_dagster_logger(__name__)
-LOGGER.setLevel(LOGGING_LEVEL_DEFAULT)
+from OpenStudioLandscapes.engine.logging.loggers import FEATURE_LOGGER as LOGGER
 
 from OpenStudioLandscapes.engine.config.models import FeatureBaseModel
 
