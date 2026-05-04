@@ -46,12 +46,15 @@ src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:1:0: C0114: Missing module 
 src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:1:0: C0103: Module name "Flamenco_Worker" doesn't conform to snake_case naming style (invalid-name)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.config.models
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:14:0: C0413: Import "from OpenStudioLandscapes.engine.config.models import FeatureBaseModel" should be placed at the top of the module (wrong-import-position)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:16:0: C0413: Import "from OpenStudioLandscapes.Flamenco_Worker import constants, dist" should be placed at the top of the module (wrong-import-position)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:19:0: C0115: Missing class docstring (missing-class-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:43:4: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:43:4: C0103: Method name "validate_flamenco_worker_NUM_SERVICES" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:54:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:5:0: E0401: Unable to import 'OpenStudioLandscapes.engine.logging.loggers' (import-error)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:5:0: E0611: No name 'logging' in module 'OpenStudioLandscapes.engine' (no-name-in-module)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:16:0: C0115: Missing class docstring (missing-class-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:40:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:40:4: C0103: Method name "validate_flamenco_worker_NUM_SERVICES" doesn't conform to snake_case naming style (invalid-name)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:51:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:6:0: C0411: third party import "pydantic.Field" should be placed before first party imports "OpenStudioLandscapes.engine.config.models.FeatureBaseModel", "OpenStudioLandscapes.engine.logging.loggers.FEATURE_LOGGER"  (wrong-import-order)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:11:0: C0411: third party import "pydantic_core.PydanticCustomError" should be placed before first party imports "OpenStudioLandscapes.engine.config.models.FeatureBaseModel", "OpenStudioLandscapes.engine.logging.loggers.FEATURE_LOGGER"  (wrong-import-order)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:13:0: C0412: Imports from package OpenStudioLandscapes are not grouped (ungrouped-imports)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.doc.readme
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
@@ -70,5 +73,5 @@ src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: R0801: Similar lines
                 Logo Flamenco\ (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 7.11/10 (previous run: 6.99/10, +0.12)
+Your code has been rated at 6.51/10 (previous run: 6.39/10, +0.12)
 
