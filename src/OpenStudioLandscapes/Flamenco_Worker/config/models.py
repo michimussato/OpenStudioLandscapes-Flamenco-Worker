@@ -9,7 +9,7 @@ from pydantic import (
 )
 from pydantic_core import PydanticCustomError
 
-from OpenStudioLandscapes.Flamenco_Worker import constants, dist, LOGGER
+from OpenStudioLandscapes.Flamenco_Worker import LOGGER, constants, dist
 
 
 class Config(FeatureBaseModel):
