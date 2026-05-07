@@ -4,7 +4,10 @@ from dagster import (
 )
 
 import OpenStudioLandscapes.Flamenco_Worker.assets
-from OpenStudioLandscapes.Flamenco_Worker import *
+from OpenStudioLandscapes.Flamenco_Worker import (
+    dist,
+    LOGGER,
+)
 
 LOGGER.info(f"Loading {dist.name} assets...")
 
