@@ -1,8 +1,6 @@
 import copy
 import enum
 import pathlib
-import shlex
-import shutil
 import textwrap
 from typing import Any, Dict, Generator, List, Union
 
@@ -17,18 +15,9 @@ from dagster import (
     Output,
     asset,
 )
-from OpenStudioLandscapes.engine.common_assets.cmd import get_feature__cmd
-from OpenStudioLandscapes.engine.common_assets.compose import get_compose
-from OpenStudioLandscapes.engine.common_assets.docker_compose_graph import (
-    get_docker_compose_graph,
-)
-from OpenStudioLandscapes.engine.common_assets.feature import get_feature__CONFIG
-from OpenStudioLandscapes.engine.common_assets.feature_out import get_feature_out_v2
-from OpenStudioLandscapes.engine.common_assets.group_in import (
-    get_feature_in,
-    get_feature_in_parent,
-)
-from OpenStudioLandscapes.engine.common_assets.group_out import get_group_out
+
+from OpenStudioLandscapes.engine.common_assets import *
+
 from OpenStudioLandscapes.engine.config.models import ConfigEngine
 from OpenStudioLandscapes.engine.constants import ASSET_HEADER_BASE
 from OpenStudioLandscapes.engine.enums import *
@@ -42,9 +31,7 @@ from OpenStudioLandscapes.Flamenco.constants import (
     ASSET_HEADER as ASSET_HEADER_FEATURE_IN,
 )
 
-from OpenStudioLandscapes.Flamenco_Worker import dist
-from OpenStudioLandscapes.Flamenco_Worker.config.models import CONFIG_STR, Config
-from OpenStudioLandscapes.Flamenco_Worker.constants import *
+from OpenStudioLandscapes.Flamenco_Worker import *
 
 # https://github.com/yaml/pyyaml/issues/722#issuecomment-1969292770
 yaml.SafeDumper.add_multi_representer(
@@ -52,38 +39,38 @@ yaml.SafeDumper.add_multi_representer(
     representer=yaml.representer.SafeRepresenter.represent_str,
 )
 
-cmd: AssetsDefinition = get_feature__cmd(
-    ASSET_HEADER=ASSET_HEADER,
+cmd: AssetsDefinition = cmd.get_feature__cmd(
+    ASSET_HEADER=constants.ASSET_HEADER,
 )
 
-CONFIG: AssetsDefinition = get_feature__CONFIG(
-    ASSET_HEADER=ASSET_HEADER,
-    CONFIG_STR=CONFIG_STR,
-    search_model_of_type=Config,
+CONFIG: AssetsDefinition = feature.get_feature__CONFIG(
+    ASSET_HEADER=constants.ASSET_HEADER,
+    CONFIG_STR=config.models.CONFIG_STR,
+    search_model_of_type=config.models.Config,
 )
 
-feature_in: AssetsDefinition = get_feature_in(
-    ASSET_HEADER=ASSET_HEADER,
+feature_in: AssetsDefinition = group_in.get_feature_in(
+    ASSET_HEADER=constants.ASSET_HEADER,
     ASSET_HEADER_BASE=ASSET_HEADER_BASE,
     ASSET_HEADER_FEATURE_IN=ASSET_HEADER_FEATURE_IN,
 )
 
-group_out: AssetsDefinition = get_group_out(
-    ASSET_HEADER=ASSET_HEADER,
+group_out: AssetsDefinition = group_out.get_group_out(
+    ASSET_HEADER=constants.ASSET_HEADER,
 )
 
 
-docker_compose_graph: AssetsDefinition = get_docker_compose_graph(
-    ASSET_HEADER=ASSET_HEADER,
+docker_compose_graph: AssetsDefinition = docker_compose_graph.get_docker_compose_graph(
+    ASSET_HEADER=constants.ASSET_HEADER,
 )
 
 
-compose: AssetsDefinition = get_compose(
-    ASSET_HEADER=ASSET_HEADER,
+compose: AssetsDefinition = compose.get_compose(
+    ASSET_HEADER=constants.ASSET_HEADER,
 )
 
-feature_out_v2: AssetsDefinition = get_feature_out_v2(
-    ASSET_HEADER=ASSET_HEADER,
+feature_out_v2: AssetsDefinition = feature_out.get_feature_out_v2(
+    ASSET_HEADER=constants.ASSET_HEADER,
 )
 
 
@@ -91,17 +78,17 @@ feature_out_v2: AssetsDefinition = get_feature_out_v2(
 # - feature_in_parent
 # - CONFIG_PARENT
 # if ConfigParent is of type FeatureBaseModel
-feature_in_parent: Union[AssetsDefinition, None] = get_feature_in_parent(
-    ASSET_HEADER=ASSET_HEADER,
+feature_in_parent: Union[AssetsDefinition, None] = group_in.get_feature_in_parent(
+    ASSET_HEADER=constants.ASSET_HEADER,
     config_parent=ConfigParent,
 )
 
 
 @asset(
-    **ASSET_HEADER,
+    **constants.ASSET_HEADER,
     ins={
         "feature_in": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "feature_in"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "feature_in"]),
         ),
     },
 )
@@ -137,13 +124,13 @@ def compose_networks(
 
 
 @asset(
-    **ASSET_HEADER,
+    **constants.ASSET_HEADER,
     ins={
         "CONFIG": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG"]),
         ),
         "CONFIG_PARENT": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
         ),
     },
     description=textwrap.dedent("""
@@ -154,7 +141,7 @@ def compose_networks(
 )
 def flamenco_worker_yaml(
     context: AssetExecutionContext,
-    CONFIG: Config,
+    CONFIG: config.models.Config,
     CONFIG_PARENT: ConfigParent,
 ) -> Generator[Output[pathlib.Path] | AssetMaterialization | Any, None, None]:
 
@@ -215,29 +202,29 @@ def flamenco_worker_yaml(
 
 
 @asset(
-    **ASSET_HEADER,
+    **constants.ASSET_HEADER,
     ins={
         "CONFIG": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG"]),
         ),
         "CONFIG_PARENT": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
         ),
         "build": AssetIn(
             AssetKey([*ASSET_HEADER_FEATURE_IN["key_prefix"], "build_docker_image"]),
         ),
         "compose_networks": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "compose_networks"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "compose_networks"]),
         ),
         "flamenco_worker_yaml": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "flamenco_worker_yaml"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "flamenco_worker_yaml"]),
         ),
     },
 )
 def compose_flamenco_worker(
     context: AssetExecutionContext,
     build: Dict,  # pylint: disable=redefined-outer-name
-    CONFIG: Config,  # pylint: disable=redefined-outer-name
+    CONFIG: config.models.Config,  # pylint: disable=redefined-outer-name
     CONFIG_PARENT: ConfigParent,  # pylint: disable=redefined-outer-name
     compose_networks: Dict,  # pylint: disable=redefined-outer-name
     flamenco_worker_yaml: pathlib.Path,  # pylint: disable=redefined-outer-name
@@ -410,10 +397,10 @@ def compose_flamenco_worker(
 
 
 @asset(
-    **ASSET_HEADER,
+    **constants.ASSET_HEADER,
     ins={
         "compose_flamenco_worker": AssetIn(
-            AssetKey([*ASSET_HEADER["key_prefix"], "compose_flamenco_worker"]),
+            AssetKey([*constants.ASSET_HEADER["key_prefix"], "compose_flamenco_worker"]),
         ),
     },
 )
