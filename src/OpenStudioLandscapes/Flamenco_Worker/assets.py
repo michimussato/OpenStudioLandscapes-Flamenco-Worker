@@ -32,8 +32,8 @@ from OpenStudioLandscapes.engine.enums import (
 )
 from OpenStudioLandscapes.engine.link.models import OpenStudioLandscapesFeatureIn
 from OpenStudioLandscapes.engine.utils import (
-    get_relative_path_via_common_root,
     get_docker_compose_names,
+    get_relative_path_via_common_root,
 )
 from OpenStudioLandscapes.engine.utils.docker.compose_dicts import (
     get_network_dicts,
@@ -46,9 +46,9 @@ from OpenStudioLandscapes.Flamenco.constants import (
 )
 
 from OpenStudioLandscapes.Flamenco_Worker import (
-    dist,
-    constants,
     config,
+    constants,
+    dist,
 )
 
 # https://github.com/yaml/pyyaml/issues/722#issuecomment-1969292770

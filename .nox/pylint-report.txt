@@ -1,57 +1,37 @@
 ************* Module OpenStudioLandscapes.Flamenco_Worker.assets
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:189:0: C0301: Line too long (139/100) (line-too-long)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:298:0: C0301: Line too long (106/100) (line-too-long)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:346:0: C0301: Line too long (133/100) (line-too-long)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:370:17: W0511: Todo (fixme)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:375:17: W0511: Todo (fixme)
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:34:0: W0401: Wildcard import OpenStudioLandscapes.engine.enums (wildcard-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:36:0: W0401: Wildcard import OpenStudioLandscapes.engine.utils (wildcard-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:37:0: W0401: Wildcard import OpenStudioLandscapes.engine.utils.docker.compose_dicts (wildcard-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:47:0: W0401: Wildcard import OpenStudioLandscapes.Flamenco_Worker.constants (wildcard-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:108:0: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:155:0: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:157:4: C0103: Argument name "CONFIG" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:158:4: C0103: Argument name "CONFIG_PARENT" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:157:4: W0621: Redefining name 'CONFIG' from outer scope (line 59) (redefined-outer-name)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:199:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:237:0: C0112: Empty function docstring (empty-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:240:4: C0103: Argument name "CONFIG" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:241:4: C0103: Argument name "CONFIG_PARENT" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:237:0: R0913: Too many arguments (6/5) (too-many-arguments)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:237:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:237:0: R0914: Too many local variables (25/15) (too-many-locals)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:361:21: C0209: Formatting a regular string which could be an f-string (consider-using-f-string)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:420:0: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:4:0: W0611: Unused import shlex (unused-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:5:0: W0611: Unused import shutil (unused-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:34:0: W0614: Unused import(s) GroupIn, OpenStudioLandscapesConfig, FeatureVolumeType, ComposeCmdExclusion, DockerComposeNetworkMode, DockerComposeRestartPolicy and DockerComposeDependsOnPolicy from wildcard import of OpenStudioLandscapes.engine.enums (unused-wildcard-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:36:0: W0614: Unused import(s) datetime, json, os, time, git, requests, discovery, LOGGER, cmd_list_to_str, get_pip_install_str, get_apt_install_str, get_copy_str, get_wget_str, get_git_root, get_configs_root, get_data_root, get_bin_root, get_image_name, parse_docker_image_path, get_compose_scope, get_feature_config, expand_dict_vars, metadatavalues_from_dict, get_bool_env, get_str_env, get_all_compose_scopes, get_dynamic_ins, get_image_metadata, create_image, get_networks_dict, download_file, get_docker_run_cmd, MutableMapping, Tuple, OpExecutionContext, get_dagster_logger, DockerConfigModel, ComposeScopeException, OpenStudioLandscapesException, OpenStudioLandscapesDockerException, docker_build_cmd, docker_push_cmd, docker_do and submit_cmds from wildcard import of OpenStudioLandscapes.engine.utils (unused-wildcard-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:37:0: W0614: Unused import(s) DockerComposeServiceDefinition, DockerComposeNetworkDefinition, Optional, Required and TypedDict from wildcard import of OpenStudioLandscapes.engine.utils.docker.compose_dicts (unused-wildcard-import)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:47:0: W0614: Unused import(s) GROUP and KEY from wildcard import of OpenStudioLandscapes.Flamenco_Worker.constants (unused-wildcard-import)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:113:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:160:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:162:4: W0621: Redefining name 'CONFIG' from outer scope (line 64) (redefined-outer-name)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:204:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:242:0: C0112: Empty function docstring (empty-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:242:0: R0913: Too many arguments (6/5) (too-many-arguments)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:242:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:242:0: R0914: Too many local variables (25/15) (too-many-locals)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:366:21: C0209: Formatting a regular string which could be an f-string (consider-using-f-string)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:427:0: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.definitions
 src/OpenStudioLandscapes/Flamenco_Worker/definitions.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module OpenStudioLandscapes.Flamenco_Worker.readme_feature
-src/OpenStudioLandscapes/Flamenco_Worker/readme_feature.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/readme_feature.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/readme_feature.py:18:8: C2801: Unnecessarily calls dunder method __str__. Use str built-in function. (unnecessary-dunder-call)
+src/OpenStudioLandscapes/Flamenco_Worker/definitions.py:12:0: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.constants
 src/OpenStudioLandscapes/Flamenco_Worker/constants.py:9:1: W0511: Todo (fixme)
 src/OpenStudioLandscapes/Flamenco_Worker/constants.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module OpenStudioLandscapes.Flamenco_Worker._definitions_with_upstream_specs
 src/OpenStudioLandscapes/Flamenco_Worker/_definitions_with_upstream_specs.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.__init__
-src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:6:5: W0511: TODO: Import directly (no need for conditional) when `python_requires = >= 3.8` (fixme)
+src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:15:5: W0511: TODO: Import directly (no need for conditional) when `python_requires = >= 3.8` (fixme)
 ************* Module OpenStudioLandscapes.Flamenco_Worker
 src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:1:0: C0103: Module name "Flamenco_Worker" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:25:4: E0401: Unable to import 'OpenStudioLandscapes.engine.logging.loggers' (import-error)
-src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:25:4: E0611: No name 'logging' in module 'OpenStudioLandscapes.engine' (no-name-in-module)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.config.models
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:15:0: C0115: Missing class docstring (missing-class-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:39:4: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:39:4: C0103: Method name "validate_flamenco_worker_NUM_SERVICES" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:50:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:19:0: C0115: Missing class docstring (missing-class-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:43:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:43:4: C0103: Method name "validate_flamenco_worker_NUM_SERVICES" doesn't conform to snake_case naming style (invalid-name)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:54:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:55:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:58:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:5:0: C0411: third party import "pydantic.Field" should be placed before first party import "OpenStudioLandscapes.engine.config.models.FeatureBaseModel"  (wrong-import-order)
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:10:0: C0411: third party import "pydantic_core.PydanticCustomError" should be placed before first party import "OpenStudioLandscapes.engine.config.models.FeatureBaseModel"  (wrong-import-order)
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:12:0: C0412: Imports from package OpenStudioLandscapes are not grouped (ungrouped-imports)
@@ -59,19 +39,7 @@ src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:12:0: C0412: Imports f
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:21:8: C2801: Unnecessarily calls dunder method __str__. Use str built-in function. (unnecessary-dunder-call)
-src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: R0801: Similar lines in 2 files
-==OpenStudioLandscapes.Flamenco_Worker.doc.readme:[14:23]
-==OpenStudioLandscapes.Flamenco_Worker.readme_feature:[11:20]
-        level=1,
-    )
-
-    # Logo
-
-    doc.add_paragraph(
-        snakemd.Inline(
-            text=textwrap.dedent("""\
-                Logo Flamenco\ (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 6.53/10 (previous run: 6.42/10, +0.12)
+Your code has been rated at 7.99/10 (previous run: 7.99/10, +0.00)
 

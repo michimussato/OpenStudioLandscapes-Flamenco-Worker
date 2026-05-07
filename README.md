@@ -81,271 +81,73 @@ The following settings are available in `OpenStudioLandscapes-Flamenco-Worker` a
 
 
 ```yaml
-# ===
-# env
-# ---
-#
-# Type: typing.Dict
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         None
-#     Default value:
-#         PydanticUndefined
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
+properties:
+  compose_scope:
+    default: worker
+    title: Compose Scope
+    type: string
+  docker_compose:
+    default: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/docker_compose/docker-compose.yml'
+    description: The path to the `docker-compose.yml` file.
+    format: path
+    title: Docker Compose
+    type: string
+  enabled:
+    default: true
+    description: Whether the Feature is enabled or not.
+    title: Enabled
+    type: boolean
+  env:
+    additionalProperties: true
+    title: Env
+    type: object
+  feature_name:
+    default: OpenStudioLandscapes-Flamenco-Worker
+    title: Feature Name
+    type: string
+  flamenco_worker_NUM_SERVICES:
+    default: 1
+    description: Number of workers to simulate in parallel.
+    exclusiveMinimum: 0
+    title: Flamenco Worker Num Services
+    type: integer
+  flamenco_worker_PADDING:
+    default: 3
+    exclusiveMinimum: 0
+    title: Flamenco Worker Padding
+    type: integer
+  flamenco_worker_storage:
+    default: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/storage'
+    format: path
+    title: Flamenco Worker Storage
+    type: string
+  group_name:
+    default: OpenStudioLandscapes_Flamenco_Worker
+    title: Group Name
+    type: string
+  key_prefixes:
+    default:
+    - OpenStudioLandscapes_Flamenco_Worker
+    items:
+      type: string
+    title: Key Prefixes
+    type: array
+  local_bind_volumes:
+    description: Here you can define Feature specific, arbitrary, absolute bind volume
+      mappings.
+    items:
+      type: string
+    title: Local Bind Volumes
+    type: array
+  local_environment_variables:
+    additionalProperties:
+      type: string
+    description: Here you can define Feature specific, arbitrary environment variables.
+    title: Local Environment Variables
+    type: object
+title: Config
+type: object
 
-
-# ==================
-# local_bind_volumes
-# ------------------
-#
-# Type: typing.List[str]
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         Here you can define Feature specific, arbitrary, absolute bind volume mappings.
-#     Default value:
-#         PydanticUndefined
-# Description:
-#     Here you can define Feature specific, arbitrary, absolute bind volume mappings.
-# Required:
-#     False
-# Examples:
-#     None
-
-
-# ===========================
-# local_environment_variables
-# ---------------------------
-#
-# Type: typing.Dict[str, str]
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         Here you can define Feature specific, arbitrary environment variables.
-#     Default value:
-#         PydanticUndefined
-# Description:
-#     Here you can define Feature specific, arbitrary environment variables.
-# Required:
-#     False
-# Examples:
-#     None
-
-
-# =============
-# config_engine
-# -------------
-#
-# Type: <class 'OpenStudioLandscapes.engine.config.models.ConfigEngine'>
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         None
-#     Default value:
-#         None
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-
-
-# ============
-# distribution
-# ------------
-#
-# Type: <class 'importlib.metadata.Distribution'>
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         None
-#     Default value:
-#         None
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-
-
-# ==========
-# group_name
-# ----------
-#
-# Type: <class 'str'>
-# Base Class Info:
-#     Required:
-#         True
-#     Description:
-#         Dagster Group name. This will represent the group node name. See https://docs.dagster.io/api/dagster/assets for more information
-#     Default value:
-#         PydanticUndefined
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-group_name: OpenStudioLandscapes_Flamenco_Worker
-
-
-# ============
-# key_prefixes
-# ------------
-#
-# Type: typing.List[str]
-# Base Class Info:
-#     Required:
-#         True
-#     Description:
-#         Dagster Asset key prefixes. This will be reflected in the nesting (directory structure) of the Asset. See https://docs.dagster.io/api/dagster/assets for more information
-#     Default value:
-#         PydanticUndefined
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-key_prefixes:
-- OpenStudioLandscapes_Flamenco_Worker
-
-
-# =======
-# enabled
-# -------
-#
-# Type: <class 'bool'>
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         Whether the Feature is enabled or not.
-#     Default value:
-#         True
-# Description:
-#     Whether the Feature is enabled or not.
-# Required:
-#     False
-# Examples:
-#     None
-
-
-# =============
-# compose_scope
-# -------------
-#
-# Type: <class 'str'>
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         None
-#     Default value:
-#         default
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-compose_scope: worker
-
-
-# ============
-# feature_name
-# ------------
-#
-# Type: <class 'str'>
-# Base Class Info:
-#     Required:
-#         True
-#     Description:
-#         The name of the feature. It is derived from the `OpenStudioLandscapes.<Feature>.dist` attribute.
-#     Default value:
-#         PydanticUndefined
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-feature_name: OpenStudioLandscapes-Flamenco-Worker
-
-
-# ==============
-# docker_compose
-# --------------
-#
-# Type: <class 'pathlib.Path'>
-# Base Class Info:
-#     Required:
-#         False
-#     Description:
-#         The path to the `docker-compose.yml` file.
-#     Default value:
-#         {DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/docker_compose/docker-compose.yml
-# Description:
-#     The path to the `docker-compose.yml` file.
-# Required:
-#     False
-# Examples:
-#     None
-
-
-# =======================
-# flamenco_worker_PADDING
-# -----------------------
-#
-# Type: <class 'int'>
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-flamenco_worker_PADDING: 3
-
-
-# ============================
-# flamenco_worker_NUM_SERVICES
-# ----------------------------
-#
-# Type: <class 'int'>
-# Description:
-#     Number of workers to simulate in parallel.
-# Required:
-#     False
-# Examples:
-#     None
-flamenco_worker_NUM_SERVICES: 1
-
-
-# =======================
-# flamenco_worker_storage
-# -----------------------
-#
-# Type: <class 'pathlib.Path'>
-# Description:
-#     None
-# Required:
-#     False
-# Examples:
-#     None
-flamenco_worker_storage: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/storage'
 ```
 
 </details>
@@ -404,4 +206,4 @@ To follow up on the previous LinkedIn publications, visit:
 
 ***
 
-Last changed: **2026-04-28 14:38:08 UTC**
+Last changed: **2026-05-07 19:22:11 UTC**
