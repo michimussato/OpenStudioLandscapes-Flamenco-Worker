@@ -2,19 +2,12 @@ project:
   description: 'Flamenco-Worker Feature for OpenStudioLandscapes (dep: OpenStudioLandscapes-Flamenco)'
   name: OpenStudioLandscapes-Flamenco-Worker
   optional-dependencies:
-    optional-base:
-    - OpenStudioLandscapes-Flamenco[optional-base] @ git+https://github.com/michimussato/OpenStudioLandscapes-Flamenco.git
     dev:
     - OpenStudioLandscapes-Flamenco-Worker[lint]
     - OpenStudioLandscapes-Flamenco-Worker[sbom]
     - OpenStudioLandscapes-Flamenco-Worker[readme]
-    lint:
-    - OpenStudioLandscapes-Flamenco-Worker[optional-base]
-    readme:
-    - OpenStudioLandscapes-Flamenco-Worker[optional-base]
     sbom:
     - OpenStudioLandscapes-Flamenco-Worker[graphviz]
-    - OpenStudioLandscapes-Flamenco-Worker[optional-base]
   urls:
     Homepage: https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker
 tool:
