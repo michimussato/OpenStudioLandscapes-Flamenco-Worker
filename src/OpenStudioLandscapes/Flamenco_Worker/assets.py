@@ -41,14 +41,14 @@ from OpenStudioLandscapes.engine.utils.docker.compose_dicts import (
 
 # Override default ConfigParent
 from OpenStudioLandscapes.Flamenco.config.models import Config as ConfigParent
-from OpenStudioLandscapes.Flamenco.constants import (
+from OpenStudioLandscapes.Flamenco import (
     ASSET_HEADER as ASSET_HEADER_FEATURE_IN,
 )
 
 from OpenStudioLandscapes.Flamenco_Worker import (
     config,
-    constants,
     dist,
+    ASSET_HEADER,
 )
 
 # https://github.com/yaml/pyyaml/issues/722#issuecomment-1969292770
@@ -58,37 +58,37 @@ yaml.SafeDumper.add_multi_representer(
 )
 
 cmd: AssetsDefinition = cmd.get_feature__cmd(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
 )
 
 CONFIG: AssetsDefinition = feature.get_feature__CONFIG(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
     CONFIG_STR=config.models.CONFIG_STR,
     search_model_of_type=config.models.Config,
 )
 
 feature_in: AssetsDefinition = group_in.get_feature_in(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
     ASSET_HEADER_BASE=ASSET_HEADER_BASE,
     ASSET_HEADER_FEATURE_IN=ASSET_HEADER_FEATURE_IN,
 )
 
 group_out: AssetsDefinition = group_out.get_group_out(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
 )
 
 
 docker_compose_graph: AssetsDefinition = docker_compose_graph.get_docker_compose_graph(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
 )
 
 
 compose: AssetsDefinition = compose.get_compose(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
 )
 
 feature_out_v2: AssetsDefinition = feature_out.get_feature_out_v2(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
 )
 
 
@@ -97,16 +97,16 @@ feature_out_v2: AssetsDefinition = feature_out.get_feature_out_v2(
 # - CONFIG_PARENT
 # if ConfigParent is of type FeatureBaseModel
 feature_in_parent: Union[AssetsDefinition, None] = group_in.get_feature_in_parent(
-    ASSET_HEADER=constants.ASSET_HEADER,
+    ASSET_HEADER=ASSET_HEADER,
     config_parent=ConfigParent,
 )
 
 
 @asset(
-    **constants.ASSET_HEADER,
+    **ASSET_HEADER,
     ins={
         "feature_in": AssetIn(
-            AssetKey([*constants.ASSET_HEADER["key_prefix"], "feature_in"]),
+            AssetKey([*ASSET_HEADER["key_prefix"], "feature_in"]),
         ),
     },
 )
@@ -142,13 +142,13 @@ def compose_networks(
 
 
 @asset(
-    **constants.ASSET_HEADER,
+    **ASSET_HEADER,
     ins={
         "CONFIG": AssetIn(
-            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG"]),
+            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG"]),
         ),
         "CONFIG_PARENT": AssetIn(
-            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
+            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
         ),
     },
     description=textwrap.dedent("""
@@ -220,22 +220,22 @@ def flamenco_worker_yaml(
 
 
 @asset(
-    **constants.ASSET_HEADER,
+    **ASSET_HEADER,
     ins={
         "CONFIG": AssetIn(
-            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG"]),
+            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG"]),
         ),
         "CONFIG_PARENT": AssetIn(
-            AssetKey([*constants.ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
+            AssetKey([*ASSET_HEADER["key_prefix"], "CONFIG_PARENT"]),
         ),
         "build": AssetIn(
             AssetKey([*ASSET_HEADER_FEATURE_IN["key_prefix"], "build_docker_image"]),
         ),
         "compose_networks": AssetIn(
-            AssetKey([*constants.ASSET_HEADER["key_prefix"], "compose_networks"]),
+            AssetKey([*ASSET_HEADER["key_prefix"], "compose_networks"]),
         ),
         "flamenco_worker_yaml": AssetIn(
-            AssetKey([*constants.ASSET_HEADER["key_prefix"], "flamenco_worker_yaml"]),
+            AssetKey([*ASSET_HEADER["key_prefix"], "flamenco_worker_yaml"]),
         ),
     },
 )
@@ -415,11 +415,11 @@ def compose_flamenco_worker(
 
 
 @asset(
-    **constants.ASSET_HEADER,
+    **ASSET_HEADER,
     ins={
         "compose_flamenco_worker": AssetIn(
             AssetKey(
-                [*constants.ASSET_HEADER["key_prefix"], "compose_flamenco_worker"]
+                [*ASSET_HEADER["key_prefix"], "compose_flamenco_worker"]
             ),
         ),
     },
