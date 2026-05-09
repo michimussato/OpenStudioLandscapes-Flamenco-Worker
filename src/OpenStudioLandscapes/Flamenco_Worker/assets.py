@@ -41,9 +41,7 @@ from OpenStudioLandscapes.engine.utils.docker.compose_dicts import (
 
 # Override default ConfigParent
 from OpenStudioLandscapes.Flamenco.config.models import Config as ConfigParent
-from OpenStudioLandscapes.Flamenco import (
-    ASSET_HEADER as ASSET_HEADER_FEATURE_IN,
-)
+from OpenStudioLandscapes.Flamenco import ASSET_HEADER as ASSET_HEADER_FEATURE_IN
 
 from OpenStudioLandscapes.Flamenco_Worker import (
     config,
