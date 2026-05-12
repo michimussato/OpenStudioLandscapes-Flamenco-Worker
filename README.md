@@ -81,72 +81,69 @@ The following settings are available in `OpenStudioLandscapes-Flamenco-Worker` a
 
 
 ```yaml
-properties:
-  compose_scope:
-    default: worker
-    title: Compose Scope
+compose_scope:
+  default: worker
+  title: Compose Scope
+  type: string
+docker_compose:
+  default: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/docker_compose/docker-compose.yml'
+  description: The path to the `docker-compose.yml` file.
+  format: path
+  title: Docker Compose
+  type: string
+enabled:
+  default: true
+  description: Whether the Feature is enabled or not.
+  title: Enabled
+  type: boolean
+env:
+  additionalProperties: true
+  title: Env
+  type: object
+feature_name:
+  default: OpenStudioLandscapes-Flamenco-Worker
+  title: Feature Name
+  type: string
+flamenco_worker_NUM_SERVICES:
+  default: 1
+  description: Number of workers to simulate in parallel.
+  exclusiveMinimum: 0
+  title: Flamenco Worker Num Services
+  type: integer
+flamenco_worker_PADDING:
+  default: 3
+  exclusiveMinimum: 0
+  title: Flamenco Worker Padding
+  type: integer
+flamenco_worker_storage:
+  default: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/storage'
+  format: path
+  title: Flamenco Worker Storage
+  type: string
+group_name:
+  default: OpenStudioLandscapes_Flamenco_Worker
+  title: Group Name
+  type: string
+key_prefixes:
+  default:
+  - OpenStudioLandscapes_Flamenco_Worker
+  items:
     type: string
-  docker_compose:
-    default: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/docker_compose/docker-compose.yml'
-    description: The path to the `docker-compose.yml` file.
-    format: path
-    title: Docker Compose
+  title: Key Prefixes
+  type: array
+local_bind_volumes:
+  description: Here you can define Feature specific, arbitrary, absolute bind volume
+    mappings.
+  items:
     type: string
-  enabled:
-    default: true
-    description: Whether the Feature is enabled or not.
-    title: Enabled
-    type: boolean
-  env:
-    additionalProperties: true
-    title: Env
-    type: object
-  feature_name:
-    default: OpenStudioLandscapes-Flamenco-Worker
-    title: Feature Name
+  title: Local Bind Volumes
+  type: array
+local_environment_variables:
+  additionalProperties:
     type: string
-  flamenco_worker_NUM_SERVICES:
-    default: 1
-    description: Number of workers to simulate in parallel.
-    exclusiveMinimum: 0
-    title: Flamenco Worker Num Services
-    type: integer
-  flamenco_worker_PADDING:
-    default: 3
-    exclusiveMinimum: 0
-    title: Flamenco Worker Padding
-    type: integer
-  flamenco_worker_storage:
-    default: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/storage'
-    format: path
-    title: Flamenco Worker Storage
-    type: string
-  group_name:
-    default: OpenStudioLandscapes_Flamenco_Worker
-    title: Group Name
-    type: string
-  key_prefixes:
-    default:
-    - OpenStudioLandscapes_Flamenco_Worker
-    items:
-      type: string
-    title: Key Prefixes
-    type: array
-  local_bind_volumes:
-    description: Here you can define Feature specific, arbitrary, absolute bind volume
-      mappings.
-    items:
-      type: string
-    title: Local Bind Volumes
-    type: array
-  local_environment_variables:
-    additionalProperties:
-      type: string
-    description: Here you can define Feature specific, arbitrary environment variables.
-    title: Local Environment Variables
-    type: object
-title: Config
-type: object
+  description: Here you can define Feature specific, arbitrary environment variables.
+  title: Local Environment Variables
+  type: object
 
 ```
 
@@ -206,4 +203,4 @@ To follow up on the previous LinkedIn publications, visit:
 
 ***
 
-Last changed: **2026-05-09 12:06:00 UTC**
+Last changed: **2026-05-12 09:57:26 UTC**
