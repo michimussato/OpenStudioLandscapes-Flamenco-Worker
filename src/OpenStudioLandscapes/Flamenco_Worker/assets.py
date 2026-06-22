@@ -385,10 +385,50 @@ def compose_flamenco_worker(
             **copy.deepcopy(ports_dict),
             # "environment": {
             # },
-            # "healthcheck": {
-            # },
+            "healthcheck": {
+                "test": [
+                    "CMD", "pgrep", "-f", "flamenco-worker"
+                ],
+                "interval": "30s",
+                "timeout": "10s",
+                "start_period": "15s",
+                "retries": "3",
+            },
             "command": command,
         }
+
+        if CONFIG.flamenco_worker_enable_nvidia_runtime:
+
+            service["environment"].update(
+                {
+                    "NVIDIA_VISIBLE_DEVICES": "all",
+                    "NVIDIA_DRIVER_CAPABILITIES": "all",  # compute,utility,graphics
+                }
+            )
+
+            service.update(
+                {
+                    "runtime": "nvidia"
+                }
+            )
+
+            service.update(
+                {
+                    "deploy": {
+                        "resources": {
+                            "reservations": {
+                                "devices": [{
+                                    "driver": "nvidia",
+                                    "count": "all",
+                                    "capabilities": [
+                                        "gpu",
+                                    ],
+                                }],
+                            },
+                        },
+                    },
+                }
+            )
 
         docker_dict["services"][service_name] = copy.deepcopy(service)
 

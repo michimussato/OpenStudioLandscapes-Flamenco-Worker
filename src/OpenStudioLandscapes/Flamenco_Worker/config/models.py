@@ -29,9 +29,17 @@ class Config(FeatureBaseModel):
         default=3,
     )
 
+    flamenco_worker_enable_nvidia_runtime: bool = Field(
+        default=False,
+        description="Enable GPU rendering for Flamenco Workers. "
+                    "Refer to https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/#nvidia-gpu-rendering "
+                    "for more details.",
+    )
+
     flamenco_worker_NUM_SERVICES: PositiveInt = Field(
         default=1,
-        description="Number of workers to simulate in parallel.",
+        description="Number of workers to simulate in parallel. This "
+                    "can 'simulate' a render farm with n workers.",
     )
 
     flamenco_worker_storage: pathlib.Path = Field(

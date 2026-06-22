@@ -10,6 +10,7 @@
       1. [Default Configuration](#default-configuration)
    4. [Local Development/Unit Testing/Debugging](#local-developmentunit-testingdebugging)
 2. [External Resources](#external-resources)
+   1. [Nvidia GPU Rendering](#nvidia-gpu-rendering)
 3. [Community](#community)
 
 ***
@@ -106,7 +107,8 @@ feature_name:
   type: string
 flamenco_worker_NUM_SERVICES:
   default: 1
-  description: Number of workers to simulate in parallel.
+  description: Number of workers to simulate in parallel. This can 'simulate' a render
+    farm with n workers.
   exclusiveMinimum: 0
   title: Flamenco Worker Num Services
   type: integer
@@ -115,6 +117,12 @@ flamenco_worker_PADDING:
   exclusiveMinimum: 0
   title: Flamenco Worker Padding
   type: integer
+flamenco_worker_enable_nvidia_runtime:
+  default: false
+  description: Enable GPU rendering for Flamenco Workers. Refer to https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/#nvidia-gpu-rendering
+    for more details.
+  title: Flamenco Worker Enable Nvidia Runtime
+  type: boolean
 flamenco_worker_storage:
   default: '{DOT_LANDSCAPES}/{LANDSCAPE}/{FEATURE}/storage'
   format: path
@@ -171,6 +179,39 @@ dagster dev --workspace workspace.yaml
 
 Please visit the [Blender Flamenco](https://flamenco.blender.org/) landing page for more information.
 
+## Nvidia GPU Rendering
+
+Requirements:
+
+- [NVIDIA Container Toolkit (included in OpenStudioLandscapes-Flamenco-Worker image)](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/index.html)
+- `nvidia` Docker runtime (see below)
+- [`enable_gpu_in_blender_pref.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco/blob/main/.payload/config/enable_gpu_in_blender_pref.py) (see `--python-expr` in `blender --help`)
+
+To enable Nvidia GPU rendering in Docker containers, the Docker daemon must be configured accordingly. Add the following keys/values to `/etc/docker/daemon.json` on each host Flamenco Worker is running on inside a container:
+
+```json
+{
+  "runtimes": {
+    "nvidia": {
+      "args": [],
+      "path": "nvidia-container-runtime"
+    }
+  }
+}
+```
+
+And restart the Docker daemon:
+
+```shell
+sudo systemctl restart docker docker.socket
+```
+
+Some additional references:
+
+- [sweettastebuds/flamenco-docker-server](https://github.com/sweettastebuds/flamenco-docker-server)
+- [Maxattax97/docker-flamenco](https://github.com/Maxattax97/docker-flamenco)
+- [Rendering on command-line with GPU?](https://blender.stackexchange.com/a/256665/152092)
+
 ***
 
 # Community
@@ -203,4 +244,4 @@ To follow up on the previous LinkedIn publications, visit:
 
 ***
 
-Last changed: **2026-06-18 22:05:28 UTC**
+Last changed: **2026-06-22 09:28:35 UTC**
