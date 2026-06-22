@@ -417,13 +417,15 @@ def compose_flamenco_worker(
                     "deploy": {
                         "resources": {
                             "reservations": {
-                                "devices": [{
-                                    "driver": "nvidia",
-                                    "count": "all",
-                                    "capabilities": [
-                                        "gpu",
-                                    ],
-                                }],
+                                "devices": [
+                                    {
+                                        "driver": "nvidia",
+                                        "count": "all",
+                                        "capabilities": [
+                                            "gpu",
+                                        ],
+                                    }
+                                ],
                             },
                         },
                     },
