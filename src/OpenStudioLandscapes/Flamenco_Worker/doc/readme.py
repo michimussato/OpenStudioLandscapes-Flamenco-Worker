@@ -47,6 +47,7 @@ def readme_feature(
             "[NVIDIA Container Toolkit (included in OpenStudioLandscapes-Flamenco-Worker image)](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/index.html)",
             "`nvidia` Docker runtime (see below)",
             "[`enable_gpu_in_blender_pref.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco/blob/main/.payload/config/enable_gpu_in_blender_pref.py) (see `--python-expr` in `blender --help`)",
+            "In `.blend` file Render Properties, set `Device=GPU Compute`"  # Todo: could that be scripted?
         ]
     )
 

@@ -186,6 +186,7 @@ Requirements:
 - [NVIDIA Container Toolkit (included in OpenStudioLandscapes-Flamenco-Worker image)](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/index.html)
 - `nvidia` Docker runtime (see below)
 - [`enable_gpu_in_blender_pref.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco/blob/main/.payload/config/enable_gpu_in_blender_pref.py) (see `--python-expr` in `blender --help`)
+- In `.blend` file Render Properties, set `Device=GPU Compute`
 
 To enable Nvidia GPU rendering in Docker containers, the Docker daemon must be configured accordingly. Add the following keys/values to `/etc/docker/daemon.json` on each host Flamenco Worker is running on inside a container:
 
@@ -244,4 +245,4 @@ To follow up on the previous LinkedIn publications, visit:
 
 ***
 
-Last changed: **2026-06-22 09:28:35 UTC**
+Last changed: **2026-06-22 10:11:02 UTC**
