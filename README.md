@@ -6,6 +6,7 @@
    1. [Brief](#brief)
    2. [Clone](#clone)
       1. [Clone and Install](#clone-and-install)
+      2. [Uninstall](#uninstall)
    3. [Configure](#configure)
       1. [Default Configuration](#default-configuration)
    4. [Local Development/Unit Testing/Debugging](#local-developmentunit-testingdebugging)
@@ -42,13 +43,31 @@ deactivate
 # Check the resulting console output for installation instructions
 ```
 
+If Feature repository was cloned locally already:
+
+```shell
+# cd OpenStudioLandscapes
+source .venv/bin/activate
+pip install --editable ./.features/<Feature>
+deactivate
+# Check the resulting console output for installation instructions
+```
+
 ### Clone and Install
 
 ```shell
 # cd OpenStudioLandscapes
 source .venv/bin/activate
-openstudiolandscapes clone-feature --repo=https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker.git \
-    && pip install --editable ./.features/OpenStudioLandscapes-Flamenco-Worker
+openstudiolandscapes clone-feature --repo=https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker.git --install
+deactivate
+```
+
+### Uninstall
+
+```shell
+# cd OpenStudioLandscapes
+source .venv/bin/activate
+pip uninstall OpenStudioLandscapes-Flamenco-Worker
 deactivate
 ```
 
@@ -107,8 +126,8 @@ feature_name:
   type: string
 flamenco_worker_NUM_SERVICES:
   default: 1
-  description: Number of workers to simulate in parallel. This can 'simulate' a render
-    farm with n workers.
+  description: "\nNumber of workers to simulate in parallel. This \ncan 'simulate'\
+    \ a render farm with n workers.\n"
   exclusiveMinimum: 0
   title: Flamenco Worker Num Services
   type: integer
@@ -119,8 +138,15 @@ flamenco_worker_PADDING:
   type: integer
 flamenco_worker_enable_nvidia_runtime:
   default: false
-  description: Enable GPU rendering for Flamenco Workers. Refer to https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/#nvidia-gpu-rendering
+  description: '
+
+    Enable GPU rendering for Flamenco Workers.
+
+    Refer to https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/#nvidia-gpu-rendering
+
     for more details.
+
+    '
   title: Flamenco Worker Enable Nvidia Runtime
   type: boolean
 flamenco_worker_storage:
@@ -185,8 +211,7 @@ Requirements:
 
 - [NVIDIA Container Toolkit (included in OpenStudioLandscapes-Flamenco-Worker image)](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/index.html)
 - `nvidia` Docker runtime (see below)
-- [`enable_gpu_in_blender_pref.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco/blob/main/.payload/config/enable_gpu_in_blender_pref.py) (see `--python-expr` in `blender --help`)
-- In `.blend` file Render Properties, set `Device=GPU Compute`
+- [`enable_gpu_in_blender_pref.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco/blob/main/.payload/config/enable_gpu_in_blender_pref.py) (see `--python-expr` in `blender --help`) (for reference; already part of the default, dynamically created `flamenco-manager.yaml`)
 
 To enable Nvidia GPU rendering in Docker containers, the Docker daemon must be configured accordingly. Add the following keys/values to `/etc/docker/daemon.json` on each host Flamenco Worker is running on inside a container:
 
@@ -245,4 +270,4 @@ To follow up on the previous LinkedIn publications, visit:
 
 ***
 
-Last changed: **2026-06-22 10:11:02 UTC**
+Last changed: **2026-07-10 21:43:21 UTC**
