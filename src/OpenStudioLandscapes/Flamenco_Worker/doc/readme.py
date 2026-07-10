@@ -46,8 +46,7 @@ def readme_feature(
         [
             "[NVIDIA Container Toolkit (included in OpenStudioLandscapes-Flamenco-Worker image)](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/index.html)",
             "`nvidia` Docker runtime (see below)",
-            "[`enable_gpu_in_blender_pref.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco/blob/main/.payload/config/enable_gpu_in_blender_pref.py) (see `--python-expr` in `blender --help`)",
-            "In `.blend` file Render Properties, set `Device=GPU Compute`"  # Todo: could that be scripted?
+            "[`enable_gpu_in_blender_pref.py`](https://github.com/michimussato/OpenStudioLandscapes-Flamenco/blob/main/.payload/config/enable_gpu_in_blender_pref.py) (see `--python-expr` in `blender --help`) (for reference; already part of the default, dynamically created `flamenco-manager.yaml`)",
         ]
     )
 
@@ -60,8 +59,7 @@ def readme_feature(
             """))
 
     doc.add_code(
-        code=textwrap.dedent(
-            """\
+        code=textwrap.dedent("""\
             {
               "runtimes": {
                 "nvidia": {
@@ -70,8 +68,7 @@ def readme_feature(
                 }
               }
             }\
-"""
-        ),
+"""),
         lang="json",
     )
 
@@ -80,11 +77,9 @@ def readme_feature(
             """))
 
     doc.add_code(
-        code=textwrap.dedent(
-            """\
+        code=textwrap.dedent("""\
             sudo systemctl restart docker docker.socket\
-"""
-        ),
+"""),
         lang="shell",
     )
 

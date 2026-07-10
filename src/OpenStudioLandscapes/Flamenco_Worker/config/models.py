@@ -1,4 +1,5 @@
 import pathlib
+import textwrap
 from typing import Dict, List
 
 from OpenStudioLandscapes.engine.config.models import FeatureBaseModel
@@ -31,15 +32,19 @@ class Config(FeatureBaseModel):
 
     flamenco_worker_enable_nvidia_runtime: bool = Field(
         default=False,
-        description="Enable GPU rendering for Flamenco Workers. "
-                    "Refer to https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/#nvidia-gpu-rendering "
-                    "for more details.",
+        description=textwrap.dedent("""
+        Enable GPU rendering for Flamenco Workers.
+        Refer to https://github.com/michimussato/OpenStudioLandscapes-Flamenco-Worker/#nvidia-gpu-rendering
+        for more details.
+        """),
     )
 
     flamenco_worker_NUM_SERVICES: PositiveInt = Field(
         default=1,
-        description="Number of workers to simulate in parallel. This "
-                    "can 'simulate' a render farm with n workers.",
+        description=textwrap.dedent("""
+        Number of workers to simulate in parallel. This 
+        can 'simulate' a render farm with n workers.
+        """),
     )
 
     flamenco_worker_storage: pathlib.Path = Field(

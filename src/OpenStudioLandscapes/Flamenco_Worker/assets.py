@@ -386,9 +386,7 @@ def compose_flamenco_worker(
             # "environment": {
             # },
             "healthcheck": {
-                "test": [
-                    "CMD", "pgrep", "-f", "flamenco-worker"
-                ],
+                "test": ["CMD", "pgrep", "-f", "flamenco-worker"],
                 "interval": "30s",
                 "timeout": "10s",
                 "start_period": "15s",
@@ -406,11 +404,7 @@ def compose_flamenco_worker(
                 }
             )
 
-            service.update(
-                {
-                    "runtime": "nvidia"
-                }
-            )
+            service.update({"runtime": "nvidia"})
 
             service.update(
                 {
