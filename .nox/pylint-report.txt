@@ -1,5 +1,6 @@
 ************* Module OpenStudioLandscapes.Flamenco_Worker.assets
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:373:17: W0511: Todo (fixme)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:354:9: W0511: Todo (fixme)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:377:17: W0511: Todo (fixme)
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:111:0: C0116: Missing function or method docstring (missing-function-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:158:0: C0116: Missing function or method docstring (missing-function-docstring)
@@ -9,8 +10,8 @@ src/OpenStudioLandscapes/Flamenco_Worker/assets.py:240:0: C0112: Empty function 
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:240:0: R0913: Too many arguments (6/5) (too-many-arguments)
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:240:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
 src/OpenStudioLandscapes/Flamenco_Worker/assets.py:240:0: R0914: Too many local variables (25/15) (too-many-locals)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:364:21: C0209: Formatting a regular string which could be an f-string (consider-using-f-string)
-src/OpenStudioLandscapes/Flamenco_Worker/assets.py:423:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:368:21: C0209: Formatting a regular string which could be an f-string (consider-using-f-string)
+src/OpenStudioLandscapes/Flamenco_Worker/assets.py:463:0: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.definitions
 src/OpenStudioLandscapes/Flamenco_Worker/definitions.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/definitions.py:12:0: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
@@ -24,20 +25,24 @@ src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:1:0: C0103: Module name "Fl
 src/OpenStudioLandscapes/Flamenco_Worker/__init__.py:39:4: C0103: Constant name "fill" doesn't conform to UPPER_CASE naming style (invalid-name)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.config.models
 src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:19:0: C0115: Missing class docstring (missing-class-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:43:4: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:43:4: C0103: Method name "validate_flamenco_worker_NUM_SERVICES" doesn't conform to snake_case naming style (invalid-name)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:54:4: C0116: Missing function or method docstring (missing-function-docstring)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:55:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:58:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:5:0: C0411: third party import "pydantic.Field" should be placed before first party import "OpenStudioLandscapes.engine.config.models.FeatureBaseModel"  (wrong-import-order)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:10:0: C0411: third party import "pydantic_core.PydanticCustomError" should be placed before first party import "OpenStudioLandscapes.engine.config.models.FeatureBaseModel"  (wrong-import-order)
-src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:12:0: C0412: Imports from package OpenStudioLandscapes are not grouped (ungrouped-imports)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:20:0: C0115: Missing class docstring (missing-class-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:56:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:56:4: C0103: Method name "validate_flamenco_worker_NUM_SERVICES" doesn't conform to snake_case naming style (invalid-name)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:67:4: C0116: Missing function or method docstring (missing-function-docstring)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:68:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:71:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:6:0: C0411: third party import "pydantic.Field" should be placed before first party import "OpenStudioLandscapes.engine.config.models.FeatureBaseModel"  (wrong-import-order)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:11:0: C0411: third party import "pydantic_core.PydanticCustomError" should be placed before first party import "OpenStudioLandscapes.engine.config.models.FeatureBaseModel"  (wrong-import-order)
+src/OpenStudioLandscapes/Flamenco_Worker/config/models.py:13:0: C0412: Imports from package OpenStudioLandscapes are not grouped (ungrouped-imports)
 ************* Module OpenStudioLandscapes.Flamenco_Worker.doc.readme
+src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:47:0: C0301: Line too long (183/100) (line-too-long)
+src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:49:0: C0301: Line too long (299/100) (line-too-long)
+src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:92:0: C0301: Line too long (112/100) (line-too-long)
+src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:94:0: C0301: Line too long (103/100) (line-too-long)
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
 src/OpenStudioLandscapes/Flamenco_Worker/doc/readme.py:21:8: C2801: Unnecessarily calls dunder method __str__. Use str built-in function. (unnecessary-dunder-call)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.05/10 (previous run: 8.05/10, -0.00)
+Your code has been rated at 7.93/10 (previous run: 8.05/10, -0.12)
 
