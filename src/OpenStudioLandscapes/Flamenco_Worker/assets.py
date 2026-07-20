@@ -351,6 +351,10 @@ def compose_flamenco_worker(
 
         # FLAMENCO_WORKER_NAME = ${HOSTNAME:+S{HOSTNAME}-}
 
+        # Todo
+        #  - [ ] verify that the image used can actually execute
+        #        the blender binary (see previous image for ref)
+
         service = {
             "container_name": container_name,
             # To have a unique, dynamic hostname, we simply must not
