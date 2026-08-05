@@ -26,6 +26,7 @@ from OpenStudioLandscapes.engine.common_assets import (
     group_out,
 )
 from OpenStudioLandscapes.engine.config.models import ConfigEngine
+from OpenStudioLandscapes.engine.base.configurable_resources.rez_resource import RezConfigurableResource
 from OpenStudioLandscapes.engine.constants import ASSET_HEADER_BASE
 from OpenStudioLandscapes.engine.enums import (
     DockerComposePolicies,
@@ -239,6 +240,7 @@ def flamenco_worker_yaml(
 )
 def compose_flamenco_worker(
     context: AssetExecutionContext,
+    config_RezConfigurableResource: RezConfigurableResource,
     build: Dict,  # pylint: disable=redefined-outer-name
     CONFIG: config.models.Config,  # pylint: disable=redefined-outer-name
     CONFIG_PARENT: ConfigParent,  # pylint: disable=redefined-outer-name
@@ -337,7 +339,7 @@ def compose_flamenco_worker(
                     *_volume_relative,
                     *config_engine.global_bind_volumes,
                     *CONFIG.local_bind_volumes,
-                    *config_engine.openstudiolandscapes__rez_config.REZ_PACKAGES_PATH_VOL,
+                    *config_RezConfigurableResource.REZ_PACKAGES_PATH_VOL,
                 }
             ),
         }
@@ -382,7 +384,7 @@ def compose_flamenco_worker(
                 % (CONFIG.compose_scope, container_name),
                 **config_engine.global_environment_variables,
                 **CONFIG.local_environment_variables,
-                **config_engine.openstudiolandscapes__rez_config.REZ_ENVIRONMENT,
+                **config_RezConfigurableResource.REZ_ENVIRONMENT,
             },
             **copy.deepcopy(volumes_dict),
             **copy.deepcopy(network_dict),
