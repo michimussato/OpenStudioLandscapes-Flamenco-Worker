@@ -25,7 +25,7 @@ from OpenStudioLandscapes.engine.common_assets import (
     group_in,
     group_out,
 )
-from OpenStudioLandscapes.engine.config.models import ConfigEngine
+from OpenStudioLandscapes.engine.env.configurable_resources.config_engine import ConfigEngineConfigurableResource
 from OpenStudioLandscapes.engine.base.configurable_resources.rez_resource import RezConfigurableResource
 from OpenStudioLandscapes.engine.constants import ASSET_HEADER_BASE
 from OpenStudioLandscapes.engine.enums import (
@@ -158,14 +158,13 @@ def compose_networks(
 )
 def flamenco_worker_yaml(
     context: AssetExecutionContext,
+    config_ConfigEngineConfigurableResource: ConfigEngineConfigurableResource,
     CONFIG: config.models.Config,
     CONFIG_PARENT: ConfigParent,
 ) -> Generator[Output[pathlib.Path] | AssetMaterialization | Any, None, None]:
 
     env: Dict = CONFIG.env
     # env_parent: Dict = CONFIG_PARENT.env
-
-    config_engine: ConfigEngine = CONFIG.config_engine
 
     flamenco_manager_yaml_path = pathlib.Path(
         env["DOT_LANDSCAPES"],
@@ -190,7 +189,7 @@ def flamenco_worker_yaml(
         # Optional advanced option, available on Linux only:
         oom_score_adjust: 500\
         """).format(
-        manager_url=f"http://flamenco-manager.{config_engine.openstudiolandscapes__domain_lan}:{CONFIG_PARENT.flamenco_manager_port_host}",
+        manager_url=f"http://flamenco-manager.{config_ConfigEngineConfigurableResource.openstudiolandscapes__domain_lan}:{CONFIG_PARENT.flamenco_manager_port_host}",
         **env,
     )
 
@@ -240,6 +239,7 @@ def flamenco_worker_yaml(
 )
 def compose_flamenco_worker(
     context: AssetExecutionContext,
+    config_ConfigEngineConfigurableResource: ConfigEngineConfigurableResource,
     config_RezConfigurableResource: RezConfigurableResource,
     build: Dict,  # pylint: disable=redefined-outer-name
     CONFIG: config.models.Config,  # pylint: disable=redefined-outer-name
@@ -250,8 +250,6 @@ def compose_flamenco_worker(
     """ """
 
     env: Dict = CONFIG.env
-
-    config_engine: ConfigEngine = CONFIG.config_engine
 
     service_name_base = "flamenco-worker"
 
@@ -272,7 +270,7 @@ def compose_flamenco_worker(
             context=context,
             service_name=service_name,
             landscape_id=env.get("LANDSCAPE", "default"),
-            domain_lan=config_engine.openstudiolandscapes__domain_lan,
+            domain_lan=config_ConfigEngineConfigurableResource.openstudiolandscapes__domain_lan,
         )
         # container_name = "--".join([service_name, env.get("LANDSCAPE", "default")])
         # host_name = ".".join([service_name, env["OPENSTUDIOLANDSCAPES__DOMAIN_LAN"]])
@@ -337,7 +335,7 @@ def compose_flamenco_worker(
                     # end up in the mounted bind volume.
                     "flamenco-worker-files:/app/flamenco-worker-files:rw",
                     *_volume_relative,
-                    *config_engine.global_bind_volumes,
+                    *config_ConfigEngineConfigurableResource.global_bind_volumes,
                     *CONFIG.local_bind_volumes,
                     *config_RezConfigurableResource.REZ_PACKAGES_PATH_VOL,
                 }
@@ -364,13 +362,13 @@ def compose_flamenco_worker(
             # https://forums.docker.com/t/docker-compose-set-container-name-and-hostname-dynamicaly/138259/2
             # https://shantanoo-desai.github.io/posts/technology/hostname-docker-container/
             # "hostname": host_name,
-            "domainname": config_engine.openstudiolandscapes__domain_lan,
+            "domainname": config_ConfigEngineConfigurableResource.openstudiolandscapes__domain_lan,
             # "mac_address": ":".join(re.findall(r"..", env["HOST_ID"])),
             "restart": DockerComposePolicies.RESTART_POLICY.ALWAYS.value,
             "image": "%s%s:%s"
             % (build["image_prefixes"], build["image_name"], build["image_tags"][0]),
             "environment": {
-                "TZ": config_engine.tz,
+                "TZ": config_ConfigEngineConfigurableResource.tz,
                 # https://www.codestudy.net/blog/how-can-i-use-environment-variables-in-docker-compose/
                 # https://docs.docker.com/reference/compose-file/interpolation/
                 "FLAMENCO_HOME": "/app/flamenco-worker-files",
@@ -382,7 +380,7 @@ def compose_flamenco_worker(
                 #        specify the worker hostname at runtime?
                 "FLAMENCO_WORKER_NAME": "${HOSTNAME}${HOSTNAME:+-}%s.%s"
                 % (CONFIG.compose_scope, container_name),
-                **config_engine.global_environment_variables,
+                **config_ConfigEngineConfigurableResource.global_environment_variables,
                 **CONFIG.local_environment_variables,
                 **config_RezConfigurableResource.REZ_ENVIRONMENT,
             },
