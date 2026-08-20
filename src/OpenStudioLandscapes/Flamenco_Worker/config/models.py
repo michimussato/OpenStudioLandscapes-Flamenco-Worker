@@ -10,7 +10,7 @@ from pydantic import (
 )
 from pydantic_core import PydanticCustomError
 
-from OpenStudioLandscapes.Flamenco_Worker import (
+from OpenStudioLandscapes.Flamenco_Worker.constants import (
     ASSET_HEADER,
     LOGGER,
     dist,
