@@ -38,16 +38,16 @@ from OpenStudioLandscapes.engine.utils import (
 from OpenStudioLandscapes.engine.utils.docker.compose_dicts import (
     get_network_dicts,
 )
-from OpenStudioLandscapes.Flamenco import ASSET_HEADER as ASSET_HEADER_FEATURE_IN
+from OpenStudioLandscapes.Flamenco.constants import ASSET_HEADER as ASSET_HEADER_FEATURE_IN
 
 # Override default ConfigParent
 from OpenStudioLandscapes.Flamenco.config.models import Config as ConfigParent
 
-from OpenStudioLandscapes.Flamenco_Worker import (
+from OpenStudioLandscapes.Flamenco_Worker.constants import (
     ASSET_HEADER,
-    config,
     dist,
 )
+from OpenStudioLandscapes.Flamenco_Worker.config import models
 
 # https://github.com/yaml/pyyaml/issues/722#issuecomment-1969292770
 yaml.SafeDumper.add_multi_representer(
@@ -61,8 +61,8 @@ cmd: AssetsDefinition = cmd.get_feature__cmd(
 
 CONFIG: AssetsDefinition = feature.get_feature__CONFIG(
     ASSET_HEADER=ASSET_HEADER,
-    CONFIG_STR=config.models.CONFIG_STR,
-    search_model_of_type=config.models.Config,
+    CONFIG_STR=models.CONFIG_STR,
+    search_model_of_type=models.Config,
 )
 
 feature_in: AssetsDefinition = group_in.get_feature_in(
@@ -157,7 +157,7 @@ def compose_networks(
 )
 def flamenco_worker_yaml(
     context: AssetExecutionContext,
-    CONFIG: config.models.Config,
+    CONFIG: models.Config,
     CONFIG_PARENT: ConfigParent,
 ) -> Generator[Output[pathlib.Path] | AssetMaterialization | Any, None, None]:
 
@@ -240,7 +240,7 @@ def flamenco_worker_yaml(
 def compose_flamenco_worker(
     context: AssetExecutionContext,
     build: Dict,  # pylint: disable=redefined-outer-name
-    CONFIG: config.models.Config,  # pylint: disable=redefined-outer-name
+    CONFIG: models.Config,  # pylint: disable=redefined-outer-name
     CONFIG_PARENT: ConfigParent,  # pylint: disable=redefined-outer-name
     compose_networks: Dict,  # pylint: disable=redefined-outer-name
     flamenco_worker_yaml: pathlib.Path,  # pylint: disable=redefined-outer-name
