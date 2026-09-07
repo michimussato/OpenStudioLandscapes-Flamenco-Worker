@@ -38,16 +38,18 @@ from OpenStudioLandscapes.engine.utils import (
 from OpenStudioLandscapes.engine.utils.docker.compose_dicts import (
     get_network_dicts,
 )
-from OpenStudioLandscapes.Flamenco.constants import ASSET_HEADER as ASSET_HEADER_FEATURE_IN
 
 # Override default ConfigParent
 from OpenStudioLandscapes.Flamenco.config.models import Config as ConfigParent
+from OpenStudioLandscapes.Flamenco.constants import (
+    ASSET_HEADER as ASSET_HEADER_FEATURE_IN,
+)
 
+from OpenStudioLandscapes.Flamenco_Worker.config import models
 from OpenStudioLandscapes.Flamenco_Worker.constants import (
     ASSET_HEADER,
     dist,
 )
-from OpenStudioLandscapes.Flamenco_Worker.config import models
 
 # https://github.com/yaml/pyyaml/issues/722#issuecomment-1969292770
 yaml.SafeDumper.add_multi_representer(
